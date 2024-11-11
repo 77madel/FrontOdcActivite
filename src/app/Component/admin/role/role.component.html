@@ -1,0 +1,68 @@
+<div class="p-12 bg-gray-100 min-h-screen">
+  <!-- Section des boutons -->
+  <div class="flex justify-end mb-4">
+    <button (click)="toggleForm()" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out">
+      {{ isEditMode ? 'Modifier un élément' : 'Ajouter un élément' }}
+    </button>
+  </div>
+
+  <!-- Formulaire d'ajout/modification -->
+  <div *ngIf="isFormVisible" class="mb-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
+      <h2 class="text-2xl font-semibold mb-4 text-center">{{ isEditMode ? 'Modifier un élément' : 'Ajouter un élément' }}</h2>
+      <form [formGroup]="addElementForm" (ngSubmit)="handleSubmit()">
+        <div class="mb-4">
+          <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+          <input
+            type="text"
+            formControlName="nom"
+            [(ngModel)]="formData.nom"
+            required
+            class="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Nom de l'élément"
+          />
+        </div>
+        <div class="flex justify-center mt-6">
+          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table des rôles -->
+  <div *ngIf="isTableVisible" class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full bg-white border border-gray-300">
+      <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nom</th>
+        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+      <tr *ngFor="let element of role">
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ element.nom }}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
+          <button (click)="onEditRole(element)" class="text-blue-600 hover:text-blue-800 transition duration-150">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button (click)="onDeleteRole(element.id)" class="text-red-600 hover:text-red-800 transition duration-150">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Message si aucune donnée n'est disponible -->
+    <div *ngIf="role && role.length === 0" class="text-center p-4 text-gray-600">
+      <p>Aucune donnée disponible pour le moment.</p>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="mt-4 text-center text-red-600 font-semibold">
+    {{ errorMessage }}
+  </div>
+</div>

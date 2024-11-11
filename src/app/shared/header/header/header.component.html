@@ -1,0 +1,59 @@
+<!-- Header -->
+<div class="h-20 w-full px-6 bg-white shadow-md fixed top-0 z-50">
+  <div class="h-full flex items-center border-b border-gray-200 gap-4">
+    <!-- Bouton pour basculer la sidebar et logo -->
+    <div class="flex items-center gap-3">
+      <!-- Logo -->
+      <a routerLink="/">
+        <img src="/assets/auth/logoOdc.png" alt="Orange Digital Center Mali" class="h-10">
+      </a>
+    </div>
+
+    <!-- Barre de recherche (si nécessaire) -->
+    <div class="flex-grow hidden md:block text-orange-500 font-bold">
+      Orange Digital Center Mali
+    </div>
+
+    <!-- Menu utilisateur -->
+    <div class="ml-auto flex items-center gap-3">
+      <!-- Notifications -->
+      <div class="relative">
+        <button (click)="toggleNotifications()" class="p-2 focus:outline-none relative">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 17h5l-1.405-1.405C18.403 15.403 18 14.209 18 13V9a6 6 0 00-5-5.917V3a1 1 0 10-2 0v.083A6 6 0 006 9v4c0 1.209-.403 2.403-1.595 3.595L3 17h5m7 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <!-- Badge de notification -->
+          <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">3</span>
+        </button>
+        <!-- Dropdown des notifications -->
+        <div *ngIf="notificationsOpen" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+          <div class="p-4">
+            <p class="text-gray-700 font-semibold">Notifications</p>
+            <!-- Liste des notifications -->
+            <div class="mt-2 space-y-2">
+              <!-- Notification item -->
+              <div class="flex items-start py-2 border-b border-gray-200 last:border-b-0">
+                <div class="flex-shrink-0">
+                  <img src="/assets/avatar/default-user.png" alt="User" class="w-8 h-8 rounded-full">
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-gray-600">Vous avez une nouvelle activité programmée.</p>
+                  <p class="text-xs text-gray-400">Il y a 5 minutes</p>
+                </div>
+              </div>
+              <!-- Autres notifications... -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu déroulant utilisateur -->
+      <div class="relative">
+        <button (click)="toggleProfileMenu()" class="p-2 focus:outline-none">
+          <img src="/assets/images/user.png" alt="Avatar" class="w-10 h-10 rounded-full">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

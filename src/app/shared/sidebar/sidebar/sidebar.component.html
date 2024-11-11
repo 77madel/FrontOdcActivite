@@ -1,0 +1,32 @@
+<!-- Sidebar -->
+<div class="flex flex-col h-screen bg-orange-600 text-white w-64">
+  <!-- Logo -->
+  <div class="flex items-center justify-center h-20">
+    <img src="/assets/auth/logoOdc.png" alt="Orange Digital Center Mali" class="h-12 w-auto" />
+  </div>
+
+  <!-- Navigation Items -->
+  <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+    <a
+      *ngFor="let item of navItems"
+      routerLink="{{ item.link }}"
+      routerLinkActive="bg-orange-700"
+      class="flex items-center px-4 py-2 rounded-md hover:bg-orange-500 transition duration-200"
+    >
+      <!-- Icône -->
+      <i [ngClass]="getIconClass(item.icon)" class="text-xl mr-3"></i>
+      <!-- Nom de l'élément -->
+      <span class="text-sm font-medium">{{ item.name }}</span>
+    </a>
+  </nav>
+
+  <!-- Bouton de déconnexion -->
+  <div class="p-4">
+    <button
+      (click)="logout()"
+      class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium bg-orange-500 hover:bg-orange-700 rounded-md transition duration-200"
+    >
+      <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+    </button>
+  </div>
+</div>

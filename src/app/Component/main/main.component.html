@@ -1,0 +1,67 @@
+<div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Card 1: Orders -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Activiter Total</div>
+    <div class="text-2xl font-bold">{{ nombreActivite }}</div>
+  </div>
+
+  <!-- Card 2: Approved -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Activité En Cours</div>
+    <div class="text-2xl font-bold">{{ nombreActiviteEncours }}</div>
+  </div>
+
+  <!-- Card 4: Subscriptions -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Activité En Attente</div>
+    <div class="flex items-center">
+      <div class="text-2xl font-bold">{{ nombreActiviteEnAttente }}</div>
+    </div>
+  </div>
+
+  <!-- Card 5: Month Total -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Actitivé Terminer</div>
+    <div class="text-2xl font-bold">{{ nombreActiviteTerminer }}</div>
+  </div>
+
+  <!-- Card 3: Users -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Nombre Employer</div>
+    <div class="flex items-center">
+      <div class="text-2xl font-bold">{{ nombreUtilisateurs }}</div>
+      <div class="ml-4 w-10 h-10">
+        <!-- Add any pie chart image or replace this with actual chart if needed -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 6: Revenue
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="text-gray-500 text-sm">Revenue</div>
+    <div class="text-2xl font-bold">$1,352</div>
+  </div>-->
+
+  <!-- Card 7: Sales dynamics (Graph) -->
+  <div class="bg-white shadow rounded-lg p-8 col-span-2 lg:col-span-3">
+    <div class="text-gray-500 text-sm">Sales Dynamics</div>
+    <div class="mt-12">
+      <!-- Replace with actual chart/graph -->
+      <div id="chart">
+        <apx-chart
+          [series]="chartOptions.series"
+          [chart]="chartOptions.chart"
+          [title]="chartOptions.dataLabels"
+          [xaxis]="chartOptions.xaxis">
+        </apx-chart>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 8: Total Receipts
+  <div class="bg-white shadow rounded-lg p-6 col-span-2 lg:col-span-1">
+    <div class="text-gray-500 text-sm">Funds Received</div>
+    <div class="text-2xl font-bold">$150,256.23</div>
+  </div>-->
+
+</div>

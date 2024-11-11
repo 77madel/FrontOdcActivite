@@ -1,0 +1,90 @@
+<div class="p-12">
+  <!-- Section des boutons -->
+  <div class="flex gap-5 mb-4 justify-end">
+    <button (click)="toggleForm()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md focus:outline-none">
+      Ajouter
+    </button>
+  </div>
+
+  <!-- Formulaire d'ajout (affiché uniquement si isFormVisible est vrai) -->
+  <div *ngIf="isFormVisible" class="mb-8">
+    <div class="w-1/2 mx-auto bg-white shadow-lg rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">{{ isEditMode ? 'Modifier un élément' : 'Ajouter un élément' }}</h2>
+
+      <form [formGroup]="addElementForm" (ngSubmit)="handleSubmit()">
+        <div class="mb-4">
+          <label for="libelle" class="block text-sm font-medium text-gray-700">Libelle</label>
+          <input matInput id="libelle" name="libelle" formControlName="libelle" [(ngModel)]="formData.libelle" required class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <div class="mb-4">
+          <label for="intutile" class="block text-sm font-medium text-gray-700">Intutile</label>
+          <input matInput id="intutile" name="intutile" formControlName="intutile" [(ngModel)]="formData.intutile" required class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <div class="mb-4">
+          <label for="point" class="block text-sm font-medium text-gray-700">Point</label>
+          <input matInput id="point" name="point" formControlName="point" [(ngModel)]="formData.point" required class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg mt-4 shadow-md focus:outline-none">
+          {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table (affichée uniquement si isTableVisible est vrai) -->
+  <div *ngIf="isTableVisible" class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border-collapse">
+        <!-- Table header -->
+        <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Libelle</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Intutile</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Point</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+        </thead>
+
+        <!-- Table body -->
+        <tbody class="bg-white">
+        <tr *ngFor="let element of paginated">
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.libelle }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.intutile }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.point }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">
+            <button (click)="onEdit(element)" class="text-blue-500 hover:text-blue-700 mr-2">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button (click)="onDelete(element.id)" class="text-red-500 hover:text-red-700">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Message si aucune donnée n'est disponible -->
+      <div *ngIf="critere && critere.length === 0" class="text-center mt-4 text-gray-500">
+        <p>Aucune donnée disponible pour le moment.</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-4">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

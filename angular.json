@@ -17,7 +17,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -38,6 +39,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -50,7 +57,15 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": true,
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             },
             "development": {
               "optimization": false,
@@ -97,5 +112,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

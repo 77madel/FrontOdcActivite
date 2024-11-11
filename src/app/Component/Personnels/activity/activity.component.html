@@ -1,0 +1,156 @@
+<div class="p-12 space-y-6">
+  <!-- Section des boutons -->
+  <div class="flex gap-4 justify-end">
+    <button class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition"
+            (click)="isEditMode ? resetForm() : toggleForm()">
+      {{ isEditMode ? 'Annuler' : 'Ajouter' }}
+    </button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <label for="search" class="block text-sm font-medium text-gray-700">Rechercher</label>
+  <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Rechercher..."
+         class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mb-4" />
+
+  <!-- Formulaire d'ajout/modification -->
+  <div *ngIf="isFormVisible" class="bg-white shadow-lg rounded-lg p-6 space-y-6">
+    <h2 class="text-xl font-semibold text-gray-700">{{ isEditMode ? 'Modifier un élément' : 'Ajouter un élément' }}</h2>
+    <form (ngSubmit)="ajouterActivity()" class="space-y-4">
+
+      <!-- Nom et Titre -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+          <input id="nom" type="text" name="nom" [(ngModel)]="activiteToAdd.nom" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+        <div>
+          <label for="titre" class="block text-sm font-medium text-gray-700">Titre</label>
+          <input id="titre" type="text" name="titre" [(ngModel)]="activiteToAdd.titre" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+      </div>
+
+      <!-- Description et Lieu -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+          <input id="description" type="text" name="description" [(ngModel)]="activiteToAdd.description" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+        <div>
+          <label for="lieu" class="block text-sm font-medium text-gray-700">Lieu</label>
+          <input id="lieu" type="text" name="lieu" [(ngModel)]="activiteToAdd.lieu" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+      </div>
+
+      <!-- Objectif Participant et Date de Début -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="objectif" class="block text-sm font-medium text-gray-700">Objectif Participant</label>
+          <input id="objectif" type="number" name="objectifParticipation" [(ngModel)]="activiteToAdd.objectifParticipation" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+        <div>
+          <label for="dateDebut" class="block text-sm font-medium text-gray-700">Date Début</label>
+          <input id="dateDebut" type="date" name="dateDebut" [(ngModel)]="activiteToAdd.dateDebut" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+      </div>
+
+      <!-- Date de Fin -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="dateFin" class="block text-sm font-medium text-gray-700">Date Fin</label>
+          <input id="dateFin" type="date" name="dateFin" [(ngModel)]="activiteToAdd.dateFin" required
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
+        </div>
+
+        <div *ngFor="let option of etape" class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
+          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected" required
+                 (change)="updateSelectedEtapes()"
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
+        </div>
+
+      </div>
+
+      <!-- Entité et Type d'Activité -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="entite" class="block text-sm font-medium text-gray-700">Entité</label>
+          <select id="entite" name="entite" [(ngModel)]="activiteToAdd.entite" required
+                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">
+            <option *ngFor="let option of entite" [value]="option.id">{{ option.nom }}</option>
+          </select>
+        </div>
+        <div>
+          <label for="typeActivite" class="block text-sm font-medium text-gray-700">Type Activité</label>
+          <select id="typeActivite" name="typeActivite" [(ngModel)]="activiteToAdd.typeActivite" required
+                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">
+            <option *ngFor="let option of typeActivite" [value]="option.id">{{ option.type }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Bouton de soumission -->
+      <div class="flex justify-end">
+        <button type="submit" class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition">
+          {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table d'activités -->
+  <div *ngIf="isTableVisible" class="bg-white shadow-lg rounded-lg p-6">
+    <table class="w-full text-left">
+      <thead>
+      <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
+        <th class="p-3">Nom</th>
+        <th class="p-3">Titre</th>
+        <th class="p-3">Lieu</th>
+        <th class="p-3">Objectif Participant</th>
+        <th class="p-3">Entité</th>
+        <th class="p-3">Type Activité</th>
+        <th class="p-3">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+      <tr *ngFor="let element of paginatedActivite" class="hover:bg-gray-100">
+        <td class="p-3">{{ element.nom }}</td>
+        <td class="p-3">{{ element.titre }}</td>
+        <td class="p-3">{{ element.lieu }}</td>
+        <td class="p-3">{{ element.objectifParticipation }}</td>
+        <td class="p-3">{{ element.entite?.nom }}</td>
+        <td class="p-3">{{ element.typeActivite?.type }}</td>
+        <td class="p-3 flex gap-2">
+          <button (click)="modifierActivite(element)" class="text-blue-500 hover:text-blue-700">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button (click)="supprimerActivite(element)" class="text-red-500 hover:text-red-700">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="!paginatedActivite || paginatedActivite.length === 0">
+        <td colspan="7" class="p-3 text-center text-gray-500">Aucune activité disponible pour le moment.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center mt-6 space-x-2">
+    <button (click)="prevPage()" [disabled]="currentPage === 1"
+            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

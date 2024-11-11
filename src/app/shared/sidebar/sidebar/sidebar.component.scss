@@ -1,0 +1,28 @@
+:host {
+  @apply block h-full relative;
+
+  .sidebar {
+    @apply bg-white border-e border-e-neutral-200;
+  }
+
+  .header {
+    @apply h-20 flex items-center;
+    --emr-sidebar-header-padding: 0 theme('padding.7');
+    --emr-sidebar-header-compact-padding: 0 theme('padding.7');
+  }
+
+
+
+  .body {
+    --emr-sidebar-body-padding: 0 theme('padding.3');
+    --emr-sidebar-body-compact-padding: 0 theme('padding.3');
+  }
+
+  .footer {
+    @apply flex items-center justify-center;
+    --emr-sidebar-footer-padding: theme('padding.6') theme('padding.7');
+    --emr-sidebar-footer-compact-padding: theme('padding.3') theme('padding.7');
+  }
+}
+
+
