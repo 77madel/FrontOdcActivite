@@ -26,3 +26,11 @@
 }
 
 
+/* Masque la scrollbar sans enlever le défilement */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* Pour Internet Explorer et Edge */
+  scrollbar-width: none; /* Pour Firefox */
+}

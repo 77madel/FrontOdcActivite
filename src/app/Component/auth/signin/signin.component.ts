@@ -14,16 +14,8 @@ import { LoginServiceService } from '../../../core';
   standalone: true,
   imports: [
     RouterLink,
-    MatButton,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatIcon,
-    MatIconButton,
-    MatSuffix,
     FormsModule,
     NgIf,
-    NgOptimizedImage
   ],
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss']
@@ -60,18 +52,16 @@ export class SigninComponent implements OnInit {
     this.loginService.login(this.username, this.password).subscribe({
       next: response => {
         const token = response.bearer;
-        console.log("DANS SIGNIN COMPO", token);
 
         if (isPlatformBrowser(this.platformId) && token) {
           localStorage.setItem("currentUser", JSON.stringify(response));
           localStorage.setItem("role", response.role ? response.role[0] : '');
-          // Utiliser NgZone pour naviguer
+          this.loginService.currentUserSubject.next(response); // Assurez-vous que le service est mis à jour
           this.router.navigateByUrl('/main').then(() => {
             this.cdRef.detectChanges();
           });
           this.snackBar.open("Connexion réussie.", "Succès", { duration: 4000 });
         } else {
-          console.log('else');
           this.snackBar.open("Aucun token reçu dans la réponse.", "Erreur", { duration: 4000 });
         }
 

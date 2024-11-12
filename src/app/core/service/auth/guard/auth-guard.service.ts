@@ -11,6 +11,7 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const currentUser = this.loginService.currentUserValue;
+    console.log('AuthGuard - Utilisateur actuel :', currentUser);
     if (currentUser) {
       // Si l'utilisateur est connecté, il peut accéder aux routes protégées
       return true;

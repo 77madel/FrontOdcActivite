@@ -32,7 +32,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatCheckbox,
   ],
   templateUrl: './entite-odc.component.html',
-  styleUrl: './entite-odc.component.scss'
+  styleUrl: './entite-odc.component.css'
 })
 export class EntiteODCComponent {
   entiteList!: Entite[];

@@ -9,7 +9,7 @@ import { UtilFunction } from '../../utils-function';
 })
 export class LoginServiceService {
   private BASE_URL = 'http://localhost:8080';
-  private currentUserSubject: BehaviorSubject<any | null>;
+  currentUserSubject: BehaviorSubject<any | null>;
   public currentUser: Observable<any | null>;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -37,6 +37,7 @@ export class LoginServiceService {
             localStorage.setItem('currentUser', JSON.stringify(user));  // Ajout à localStorage
             localStorage.setItem('role', user.role);
             this.currentUserSubject.next(user);
+            console.log('Utilisateur actuel :', this.currentUserValue);
           }
           return user;
         }),
