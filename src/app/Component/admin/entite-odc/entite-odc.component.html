@@ -87,7 +87,9 @@
           required
           class="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring focus:ring-orange-500 focus:border-orange-500"
         >
-          <option *ngFor="let option of utilisateursPersonnels" [value]="option">{{ option.nom }} {{ option.prenom }}</option>
+          <option *ngFor="let option of utilisateursPersonnels" [ngValue]="option">
+            {{ option.nom }} {{ option.prenom }}
+          </option>
         </select>
       </div>
 

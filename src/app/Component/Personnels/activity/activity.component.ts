@@ -105,20 +105,6 @@ export class ActivityComponent {
     this.activiteToAdd = new Activity();
   }
 
-  // Méthode pour mettre à jour les étapes sélectionnées
-  async updateSelectedEtapes() {
-    // Créer un objet à partir des étapes sélectionnées
-    const selectedEtape = this.etape!.find(option => option.selected);
-    if (selectedEtape) {
-      try {
-        const response = await this.etapeService.add([selectedEtape]);
-        console.log('Étape ajoutée avec succès:', response);
-      } catch (err) {
-        console.error('Erreur lors de l\'ajout de l\'étape:', err);
-      }
-    }
-  }
-
 
   ngOnInit(): void {
     this.getAllActivite();
@@ -184,90 +170,136 @@ export class ActivityComponent {
   }
 
 
+  //
+  // // Méthode pour mettre à jour les étapes sélectionnées
+  // updateSelectedEtapes() {
+  //   // Filtrer les étapes qui sont sélectionnées
+  //   const selectedEtapes = this.etape!.filter(option => option.selected);
+  //
+  //   // Mettre à jour les étapes de l'activité
+  //   this.activiteToAdd.etape = selectedEtapes.map(etape => ({
+  //     id: etape.id,
+  //     nom: etape.nom
+  //   }));
+  //
+  //   console.log('Étapes sélectionnées mises à jour dans l\'activité:', this.activiteToAdd.etape);
+  // }
+
+  // // Méthode pour mettre à jour les étapes sélectionnées
+  // updateSelectedEtapes() {
+  //   // Filtrer les étapes qui sont sélectionnées
+  //   const selectedEtapes = this.etape!.filter(option => option.selected);
+  //
+  //   // Mettre à jour les étapes de l'activité en ignorant les propriétés 'status' et 'critere_id'
+  //   this.activiteToAdd.etape = selectedEtapes.map(etape => ({
+  //     id: etape.id,
+  //     nom: etape.nom
+  //     // On ignore ici 'status' et 'critere_id'
+  //   }));
+  //
+  //   console.log('Étapes sélectionnées mises à jour dans l\'activité:', this.activiteToAdd.etape);
+  // }
   // Ajoutez une propriété pour le mode
   isModificationMode: boolean = false; // initialisé à false pour l'ajout
 
+  updateSelectedEtapes() {
+    if (!Array.isArray(this.activiteToAdd.etape)) {
+      this.activiteToAdd.etape = [];
+    }
+
+    const selectedEtapes = this.etape!.filter(option => option.selected);
+    console.log('Étapes sélectionnées:', selectedEtapes);
+
+    this.activiteToAdd.etape = selectedEtapes.map(etape => {
+      // @ts-ignore
+      const existingEtape = this.activiteToAdd.etape.find(e => e.id === etape.id);
+
+      // Conserver les valeurs existantes pour statut et critere_id
+      return {
+        id: etape.id,
+        nom: etape.nom,
+        // Conservez statut de l'étape existante, sinon utilisez celui de l'étape sélectionnée
+        statut: existingEtape?.statut ?? etape.statut,
+        // Conservez critere_id de l'étape existante, sinon utilisez celui de l'étape sélectionnée
+        critere_id: existingEtape?.critere?.id ?? etape.critere?.id
+      };
+    });
+
+    console.log('Étapes mises à jour dans l\'activité:', this.activiteToAdd.etape);
+  }
+
   ajouterActivity() {
-    // Vérifiez que l'entité est sélectionnée
     if (!this.activiteToAdd.entite) {
       this.snackBar.open("Erreur", "Veuillez sélectionner une entité.", { duration: 3000 });
       return;
     }
 
-    // Vérifiez si nous sommes en mode de modification
     if (this.isModificationMode) {
-      // Récupérer toutes les étapes sélectionnées
       const selectedEtapes = this.etape!.filter(option => option.selected);
-      console.log('Étapes sélectionnées:', selectedEtapes); // Pour le débogage
+      console.log('Étapes sélectionnées:', selectedEtapes);
 
-      // Vérifier si des étapes ont été sélectionnées
       if (selectedEtapes.length > 0) {
-        // Assurez-vous que this.activiteToAdd.etape est bien un tableau
         if (!Array.isArray(this.activiteToAdd.etape)) {
-          this.activiteToAdd.etape = []; // Initialisez comme un tableau vide si nécessaire
+          this.activiteToAdd.etape = [];
         }
 
-        // Filtrer les étapes qui n'ont pas encore été ajoutées à l'activité
         const nouvellesEtapes = selectedEtapes.filter(etape => {
           return !this.activiteToAdd.etape!.some(existingEtape => existingEtape.id === etape.id);
         });
 
-        console.log('Nouvelles étapes à ajouter:', nouvellesEtapes); // Pour le débogage
-
         if (nouvellesEtapes.length > 0) {
-          // Envoyer uniquement les nouvelles étapes sélectionnées
-          this.etapeService.add(nouvellesEtapes).then(response => {
+          const etapesAvecStatutEtCritere = nouvellesEtapes.map(etape => {
+            const existingEtape = this.activiteToAdd.etape?.find(e => e.id === etape.id);
+            return {
+              id: etape.id,
+              nom: etape.nom,
+              // Conservez le statut de l'existant, sinon prenez celui de la nouvelle étape
+              statut: existingEtape?.statut ?? etape.statut,
+              // Conservez le critere_id de l'existant, sinon prenez celui de la nouvelle étape
+              critere_id: existingEtape?.critere?.id ?? etape.critere?.id
+            };
+          });
+
+          this.etapeService.add(etapesAvecStatutEtCritere).then(response => {
             console.log('Étapes ajoutées avec succès:', response);
-
-            // Ajoutez les nouvelles étapes retournées par le backend à l'activité
             if (response && Array.isArray(response)) {
-              this.activiteToAdd.etape!.push(...response); // Utilisez le spread operator pour ajouter les nouvelles étapes
+              this.activiteToAdd.etape!.push(...response);
             }
-
-            // Après avoir ajouté les étapes, on peut procéder à l'ajout ou la modification de l'activité
             this.submitActivity();
           }).catch(error => {
             console.error('Erreur lors de l\'ajout des étapes:', error);
             this.snackBar.open("Erreur", "Erreur lors de l'ajout des étapes.", { duration: 3000 });
           });
         } else {
-          // Si aucune nouvelle étape à ajouter
           this.snackBar.open("Info", "Toutes les étapes sélectionnées sont déjà ajoutées.", { duration: 3000 });
-          this.submitActivity(); // On peut toujours soumettre l'activité sans modification d'étape
+          this.submitActivity();
         }
       } else {
         console.warn('Aucune étape sélectionnée.');
-        // Lors de la modification, vous pouvez choisir d'ajouter une étape vide ou permettre la soumission
-        if (this.activiteToAdd.etape!.length === 0) {
-          this.snackBar.open("Info", "Aucune étape sélectionnée. Vous pouvez toujours modifier l'activité sans étapes.", { duration: 3000 });
-        }
-        this.submitActivity(); // Soumettez même sans étapes
+        this.submitActivity();
       }
     } else {
-      // Si en mode d'ajout, on peut soumettre directement l'activité
       this.submitActivity();
     }
   }
 
   submitActivity() {
-    // Vérifiez que this.activiteToAdd.etape existe et est un tableau
     if (this.isModificationMode && (!this.activiteToAdd.etape || this.activiteToAdd.etape.length === 0)) {
-      this.snackBar.open("Erreur", "Veuillez sélectionner au moins une étape pour la modification.", { duration: 3000 });
+      this.snackBar.open("Erreur", "Veuillez sélectionner au moins une étape pour la modification.", {duration: 3000});
       return;
     }
 
-    // Gestion de l'ajout ou de la mise à jour d'une activité
     if (this.isEditMode) {
       this.globalService.update("activite", this.activiteToAdd.id!, this.activiteToAdd).subscribe({
         next: (data: any) => {
           console.log(data);
           this.getAllActivite();
-          this.snackBar.open("Succès", "Activité modifiée avec succès.", { duration: 3000 });
+          this.snackBar.open("Succès", "Activité modifiée avec succès.", {duration: 3000});
           this.resetForm();
         },
         error: (err: { error: { message: any; }; }) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification de l'activité : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          this.snackBar.open("Erreur", "Erreur lors de la modification de l'activité : " + (err.error?.message || 'Erreur inconnue'), {duration: 3000});
         }
       });
     } else {
@@ -275,54 +307,19 @@ export class ActivityComponent {
         next: (data: any) => {
           console.log(data);
           this.getAllActivite();
-          this.snackBar.open("Succès", "Activité ajoutée avec succès.", { duration: 3000 });
+          this.snackBar.open("Succès", "Activité ajoutée avec succès.", {duration: 3000});
           this.resetForm();
         },
         error: (err: { error: { message: any; }; }) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout de l'activité : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          this.snackBar.open("Erreur", "Erreur lors de l'ajout de l'activité : " + (err.error?.message || 'Erreur inconnue'), {duration: 3000});
         }
       });
     }
   }
-
-
-  /*submitActivity() {
-    // Vérifiez que this.activiteToAdd.etape existe et est un tableau
-    if (!this.activiteToAdd.etape || this.activiteToAdd.etape.length === 0) {
-      this.snackBar.open("Erreur", "Veuillez sélectionner au moins une étape.", { duration: 3000 });
-      return;
-    }
-
-    // Gestion de l'ajout ou de la mise à jour d'une activité
-    if (this.isEditMode) {
-      this.globalService.update("activite", this.activiteToAdd.id!, this.activiteToAdd).subscribe({
-        next: (data: any) => {
-          console.log(data);
-          this.getAllActivite();
-          this.snackBar.open("Succès", "Activité modifiée avec succès.", { duration: 3000 });
-          this.resetForm();
-        },
-        error: (err: { error: { message: any; }; }) => {
-          console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification de l'activité : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
-        }
-      });
-    } else {
-      this.globalService.post("activite", this.activiteToAdd).subscribe({
-        next: (data: any) => {
-          console.log(data);
-          this.getAllActivite();
-          this.snackBar.open("Succès", "Activité ajoutée avec succès.", { duration: 3000 });
-          this.resetForm();
-        },
-        error: (err: { error: { message: any; }; }) => {
-          console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout de l'activité : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
-        }
-      });
-    }
-  }*/
+  // updateSelectedEtapes() {
+  //   this.activiteToAdd.etape = this.etape!.filter(option => option.selected);
+  // }
 
 
   resetForm() {

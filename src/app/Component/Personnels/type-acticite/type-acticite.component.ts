@@ -125,31 +125,32 @@ export class TypeActiciteComponent {
 
 
   ajouterTypeActivite() {
+    console.log("Appel de ajouterTypeActivite avec", this.typeActiviteToAdd);
     if (this.isEditMode) {
-      // Mode édition
+      console.log("Mode édition activé");
       this.globalService.update("typeActivite", this.typeActiviteToAdd.id!, this.typeActiviteToAdd).subscribe({
         next: (data: any) => {
           this.getAllType();
-          this.snackBar.open("Succès", "Modifier avec succès.", { duration: 3000 });
+          this.snackBar.open("Succès", "Modifié avec succès.", { duration: 3000 });
           this.resetForm();
         },
-        error: (err: { error: { message: any; }; }) => {
+        error: (err) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification  : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          this.snackBar.open("Erreur", "Erreur lors de la modification : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
         }
       });
     } else {
-      // Mode ajout
+      console.log("Mode ajout activé");
       this.globalService.post("typeActivite", this.typeActiviteToAdd).subscribe({
         next: (data: any) => {
-          console.log(data);
+          console.log("Réponse de l'ajout", data);
           this.getAllType();
-          this.snackBar.open("Succès", "ajouté avec succès.", { duration: 3000 });
+          this.snackBar.open("Succès", "Ajouté avec succès.", { duration: 3000 });
           this.resetForm();
         },
-        error: (err: { error: { message: any; }; }) => {
+        error: (err) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout  : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          this.snackBar.open("Erreur", "Erreur lors de l'ajout : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
         }
       });
     }

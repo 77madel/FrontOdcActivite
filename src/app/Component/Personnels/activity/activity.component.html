@@ -67,12 +67,14 @@
                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
         </div>
 
+        <!-- Boucle pour afficher les étapes avec cases à cocher -->
         <div *ngFor="let option of etape" class="mb-4">
           <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
-          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected" required
+          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"
                  (change)="updateSelectedEtapes()"
                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
         </div>
+
 
       </div>
 
@@ -115,6 +117,7 @@
         <th class="p-3">Entité</th>
         <th class="p-3">Type Activité</th>
         <th class="p-3">Actions</th>
+        <th class="p-3"></th>
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -132,6 +135,11 @@
           <button (click)="supprimerActivite(element)" class="text-red-500 hover:text-red-700">
             <i class="fas fa-trash-alt"></i>
           </button>
+        </td>
+
+        <!-- Message si aucune étape n'est disponible pour l'activité -->
+        <td *ngIf="!element.etape || element.etape.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400 blink text-red-500">
+          Cette activité n'a pas d'étapes.
         </td>
       </tr>
       <tr *ngIf="!paginatedActivite || paginatedActivite.length === 0">

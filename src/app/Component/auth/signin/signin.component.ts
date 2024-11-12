@@ -65,12 +65,11 @@ export class SigninComponent implements OnInit {
         if (isPlatformBrowser(this.platformId) && token) {
           localStorage.setItem("currentUser", JSON.stringify(response));
           localStorage.setItem("role", response.role ? response.role[0] : '');
-          this.snackBar.open("Connexion réussie.", "Succès", { duration: 4000 });
-
           // Utiliser NgZone pour naviguer
           this.router.navigateByUrl('/main').then(() => {
             this.cdRef.detectChanges();
           });
+          this.snackBar.open("Connexion réussie.", "Succès", { duration: 4000 });
         } else {
           console.log('else');
           this.snackBar.open("Aucun token reçu dans la réponse.", "Erreur", { duration: 4000 });
