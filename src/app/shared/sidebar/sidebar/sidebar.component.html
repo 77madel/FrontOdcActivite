@@ -7,17 +7,19 @@
 
   <!-- Navigation Items -->
   <nav class="flex-1 px-4 space-y-2 overflow-y-auto hide-scrollbar">
-    <a
-      *ngFor="let item of navItems"
-      routerLink="{{ item.link }}"
-      routerLinkActive="bg-orange-700"
-      class="flex items-center px-4 py-2 rounded-md hover:bg-orange-500 transition duration-200"
-    >
-      <!-- Icône -->
-      <i [ngClass]="getIconClass(item.icon)" class="text-xl mr-3"></i>
-      <!-- Nom de l'élément -->
-      <span class="text-sm font-medium">{{ item.name }}</span>
-    </a>
+    <ng-container *ngFor="let item of navItems">
+      <a
+        *ngIf="hasAccess(item.roles)"
+        [routerLink]="item.link"
+        routerLinkActive="bg-orange-700"
+        class="flex items-center px-4 py-2 rounded-md hover:bg-orange-500 transition duration-200"
+      >
+        <!-- Icône -->
+        <i [ngClass]="getIconClass(item.icon)" class="text-xl mr-3"></i>
+        <!-- Nom de l'élément -->
+        <span class="text-sm font-medium">{{ item.name }}</span>
+      </a>
+    </ng-container>
   </nav>
 
   <!-- Bouton de déconnexion -->

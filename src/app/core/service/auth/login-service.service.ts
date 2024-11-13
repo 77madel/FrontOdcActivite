@@ -33,16 +33,33 @@ export class LoginServiceService {
     return this.http.post<any>(`${this.BASE_URL}/auth/login`, { username, password })
       .pipe(
         map(user => {
-          if (user && user.token && this.isBrowser()) {
-            localStorage.setItem('currentUser', JSON.stringify(user));  // Ajout à localStorage
-            localStorage.setItem('role', user.role);
+          if (user && user.bearer && this.isBrowser()) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            const decoded = this.decodeJwt(user.bearer);
+            const roles = decoded && decoded.role ? [decoded.role] : [];
+            localStorage.setItem('roles', JSON.stringify(roles));
             this.currentUserSubject.next(user);
-            console.log('Utilisateur actuel :', this.currentUserValue);
           }
           return user;
         }),
         catchError(this.handleError)
       );
+  }
+
+  /**
+   * Décode un token JWT et retourne la charge utile
+   * @param token Le token JWT à décoder
+   * @returns La charge utile du JWT ou null en cas d'erreur
+   */
+  private decodeJwt(token: string): any | null {
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload);
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error('Erreur lors du décodage du JWT', error);
+      return null;
+    }
   }
 
   /**
@@ -68,7 +85,7 @@ export class LoginServiceService {
   logout() {
     if (this.isBrowser()) {
       localStorage.removeItem('currentUser');
-      localStorage.removeItem('role'); // Supprime aussi le rôle
+      localStorage.removeItem('roles'); // Supprime aussi le rôle
     }
     this.currentUserSubject.next(null); // Met à jour l'utilisateur connecté à null
     this.router.navigate(['sign-in']); // Redirige vers la page de connexion
@@ -80,7 +97,8 @@ export class LoginServiceService {
    * @returns Vrai si l'utilisateur a le rôle
    */
   hasRole(role: string): boolean {
-    return !!this.currentUserValue && this.currentUserValue.role === role;
+    const roles = this.getUserRoles();
+    return roles.includes(role);
   }
 
   /**
@@ -116,5 +134,17 @@ export class LoginServiceService {
    */
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  }
+
+  /**
+   * Récupère les rôles de l'utilisateur connecté
+   * @returns Tableau des rôles ou tableau vide
+   */
+  getUserRoles(): string[] {
+    if (this.isBrowser()) {
+      const roles = localStorage.getItem('roles');
+      return roles ? JSON.parse(roles) : [];
+    }
+    return [];
   }
 }

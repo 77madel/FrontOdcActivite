@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {Location, NgClass, NgForOf} from '@angular/common';
+import {Location, NgClass, NgForOf, NgIf} from '@angular/common';
 import { LoginServiceService } from '../../../core';
 
 @Component({
@@ -12,7 +12,8 @@ import { LoginServiceService } from '../../../core';
     NgClass,
     NgForOf,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    NgIf
   ],
   host: {
     class: 'sidebar'
@@ -20,79 +21,29 @@ import { LoginServiceService } from '../../../core';
 })
 export class SidebarComponent {
   navItems = [
-    {
-      key: 'dashboard',
-      type: 'link',
-      name: 'Dashboard',
-      icon: 'home',
-      link: '/main'
-    },
-    {
-      key: 'entite-odc',
-      type: 'link',
-      name: 'Entités ODC',
-      icon: 'building',
-      link: '/entite-odc'
-    },
-    {
-      key: 'employer',
-      type: 'link',
-      name: 'Employés',
-      icon: 'user-tie',
-      link: '/employer'
-    },
-    {
-      key: 'role',
-      type: 'link',
-      name: 'Rôles',
-      icon: 'user-shield',
-      link: '/role'
-    },
-    {
-      key: 'activity',
-      type: 'link',
-      name: 'Activités',
-      icon: 'tasks',
-      link: '/activity'
-    },
-    {
-      key: 'typeActivite',
-      type: 'link',
-      name: 'Types d\'Activité',
-      icon: 'th-list',
-      link: '/typeActivite'
-    },
-    {
-      key: 'critere',
-      type: 'link',
-      name: 'Critères',
-      icon: 'check-circle',
-      link: '/critere'
-    },
-    {
-      key: 'etape',
-      type: 'link',
-      name: 'Étapes',
-      icon: 'list-ol',
-      link: '/etape'
-    },
-    {
-      key: 'participants',
-      type: 'link',
-      name: 'Participants',
-      icon: 'users',
-      link: '/participants'
-    },
-    {
-      key: 'blacklist',
-      type: 'link',
-      name: 'Liste noire',
-      icon: 'ban',
-      link: '/blacklist'
-    },
+    { key: 'dashboard', type: 'link', name: 'Dashboard', icon: 'home', link: '/main', roles: ['PERSONNEL', 'SUPERADMIN'] },
+    { key: 'entite-odc', type: 'link', name: 'Entités ODC', icon: 'building', link: '/entite-odc', roles: ['SUPERADMIN'] },
+    { key: 'employer', type: 'link', name: 'Employés', icon: 'user-tie', link: '/employer', roles: ['SUPERADMIN'] },
+    { key: 'role', type: 'link', name: 'Rôles', icon: 'user-shield', link: '/role', roles: ['SUPERADMIN'] },
+    { key: 'activity', type: 'link', name: 'Activités', icon: 'tasks', link: '/activity', roles: ['PERSONNEL'] },
+    { key: 'typeActivite', type: 'link', name: 'Types d\'Activité', icon: 'th-list', link: '/typeActivite', roles: ['PERSONNEL'] },
+    { key: 'critere', type: 'link', name: 'Critères', icon: 'check-circle', link: '/critere', roles: ['PERSONNEL'] },
+    { key: 'etape', type: 'link', name: 'Étapes', icon: 'list-ol', link: '/etape', roles: ['PERSONNEL'] },
+    { key: 'participants', type: 'link', name: 'Participants', icon: 'users', link: '/participants', roles: ['PERSONNEL'] },
+    { key: 'blacklist', type: 'link', name: 'Liste noire', icon: 'ban', link: '/blacklist', roles: ['PERSONNEL'] },
   ];
 
-  constructor(private router: Router, private location: Location, private loginService: LoginServiceService) {}
+  userRoles: string[] = [];
+
+  constructor(private router: Router, private location: Location, private loginService: LoginServiceService) {
+    this.userRoles = this.loginService.getUserRoles();
+    console.log("Rôles de l'utilisateur :", this.userRoles);
+  }
+
+  // Vérifie si l'utilisateur a accès à l'élément
+  hasAccess(allowedRoles: string[]): boolean {
+    return allowedRoles.some(role => this.userRoles.includes(role));
+  }
 
   // Méthode pour récupérer la classe d'icône Font Awesome en fonction du nom
   getIconClass(iconName: string): string {

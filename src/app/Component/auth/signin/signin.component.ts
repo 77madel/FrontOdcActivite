@@ -8,6 +8,7 @@ import { FormsModule } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {isPlatformBrowser, NgIf, NgOptimizedImage} from '@angular/common';
 import { LoginServiceService } from '../../../core';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-signin',
@@ -35,7 +36,7 @@ export class SigninComponent implements OnInit {
     private snackBar: MatSnackBar,
     private ngZone: NgZone,
     private cdRef: ChangeDetectorRef,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -55,7 +56,7 @@ export class SigninComponent implements OnInit {
 
         if (isPlatformBrowser(this.platformId) && token) {
           localStorage.setItem("currentUser", JSON.stringify(response));
-          localStorage.setItem("role", response.role ? response.role[0] : '');
+          const roles = this.loginService.getUserRoles();
           this.loginService.currentUserSubject.next(response); // Assurez-vous que le service est mis à jour
           this.router.navigateByUrl('/main').then(() => {
             this.cdRef.detectChanges();
