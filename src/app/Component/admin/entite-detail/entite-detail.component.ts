@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalCrudService, Entite, Utilisateur } from '../../../core';
 import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-entite-detail',
@@ -83,22 +84,50 @@ export class EntiteDetailComponent implements OnInit {
   updateEntite() {
     const formData = new FormData();
 
+    // Append the entiteOdc JSON as a Blob
     formData.append(
       'entiteOdc',
       new Blob([JSON.stringify(this.entiteToAdd)], { type: 'application/json' })
     );
 
+    // Append the logo file if it exists
     if (this.selectedFile) {
       formData.append('logo', this.selectedFile);
     }
 
+    // Append the utilisateurId if available
     if (this.selectedUtilisateurId) {
       formData.append('utilisateurId', this.selectedUtilisateurId.toString());
     } else {
-      console.error('Aucun utilisateur sélectionné ou ID non disponible.');
-      return;
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Aucun utilisateur sélectionné ou ID non disponible.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
+      return; // Stop the process if utilisateurId is missing
     }
 
+    // Append the entiteId, ensuring it's available
+    if (this.entiteToAdd.id) {
+      formData.append('entiteId', this.entiteToAdd.id.toString());
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Aucun ID d’entité disponible.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
+      return; // Stop the process if entiteId is missing
+    }
+
+    // Call the global service to update the entity
     this.globalService.update('entite', this.entiteToAdd.id!, formData).subscribe({
       next: (data) => {
         console.log(data);
@@ -106,10 +135,35 @@ export class EntiteDetailComponent implements OnInit {
         this.toggleForm();
         this.isEditMode = false;
         this.selectedFile = null;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Modification opérée avec éclat."
+        });
       },
       error: (err) => {
-        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: '<span class="text-red-500">Échec</span>',
+          text: 'Une erreur est survenue. Veuillez réessayer.',
+          confirmButtonText: 'Ok',
+          customClass: {
+            confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+          },
+        });
       },
     });
   }
+
+
 }

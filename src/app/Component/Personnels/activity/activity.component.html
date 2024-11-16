@@ -1,16 +1,22 @@
 <div class="p-12 space-y-6">
   <!-- Section des boutons -->
-  <div class="flex gap-4 justify-end">
-    <button class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition"
-            (click)="isEditMode ? resetForm() : toggleForm()">
-      {{ isEditMode ? 'Annuler' : 'Ajouter' }}
-    </button>
+  <div class="flex items-center gap-6 text-2xl mb-2 font-bold tracking-normal text-white">
+    <div class="flex flex-col grow items-start bg-orange-400 rounded-3xl w-fit">
+      <div class="px-5 pb-0 bg-black rounded-3xl">
+        Nos Activitées
+      </div>
+    </div>
+    <div class="mt-3 flex-grow flex justify-end">
+      <button class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition"
+              (click)="isEditMode ? resetForm() : toggleForm()">
+        {{ isEditMode ? 'Annuler' : 'Ajouter' }}
+      </button>
+    </div>
   </div>
 
   <!-- Barre de recherche -->
-  <label for="search" class="block text-sm font-medium text-gray-700">Rechercher</label>
   <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Rechercher..."
-         class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mb-4" />
+         class="w-full p-3 border border-orange-500 rounded-lg focus:ring-2 focus:ring-orange-500 mb-4" />
 
   <!-- Formulaire d'ajout/modification -->
   <div *ngIf="isFormVisible" class="bg-white shadow-lg rounded-lg p-6 space-y-6">
@@ -67,19 +73,6 @@
                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
         </div>
 
-        <!-- Boucle pour afficher les étapes avec cases à cocher -->
-        <div *ngFor="let option of etape" class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
-          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"
-                 (change)="updateSelectedEtapes()"
-                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
-        </div>
-
-
-      </div>
-
-      <!-- Entité et Type d'Activité -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label for="entite" class="block text-sm font-medium text-gray-700">Entité</label>
           <select id="entite" name="entite" [(ngModel)]="activiteToAdd.entite" required
@@ -87,12 +80,23 @@
             <option *ngFor="let option of entite" [value]="option.id">{{ option.nom }}</option>
           </select>
         </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label for="typeActivite" class="block text-sm font-medium text-gray-700">Type Activité</label>
           <select id="typeActivite" name="typeActivite" [(ngModel)]="activiteToAdd.typeActivite" required
                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">
             <option *ngFor="let option of typeActivite" [value]="option.id">{{ option.type }}</option>
           </select>
+        </div>
+
+        <!-- Boucle pour afficher les étapes avec cases à cocher -->
+        <div *ngFor="let option of etape" class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
+          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"
+                 (change)="updateSelectedEtapes()"
+                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
         </div>
       </div>
 
@@ -129,7 +133,10 @@
         <td class="p-3">{{ element.entite?.nom }}</td>
         <td class="p-3">{{ element.typeActivite?.type }}</td>
         <td class="p-3 flex gap-2">
-          <button (click)="modifierActivite(element)" class="text-blue-500 hover:text-blue-700">
+          <button  class="text-bg-dark hover:text-orange-500">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button (click)="modifierActivite(element)" class="text-bg-dark hover:text-orange-500">
             <i class="fas fa-edit"></i>
           </button>
           <button (click)="supprimerActivite(element)" class="text-red-500 hover:text-red-700">

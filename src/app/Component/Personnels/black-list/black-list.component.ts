@@ -1,30 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
 import {NgForOf, NgIf} from "@angular/common";
 import {Utilisateur, BlackList, GlobalCrudService} from "../../../core";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-black-list',
   standalone: true,
   imports: [
     FormsModule,
-    MatButton,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatSelect,
     NgForOf,
     NgIf,
     ReactiveFormsModule
@@ -32,7 +17,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './black-list.component.html',
   styleUrl: './black-list.component.scss'
 })
-export class BlackListComponent {
+export class BlackListComponent implements OnInit {
   blackList!: BlackList[];
   selectedBlackList!: BlackList;
   blackListToAdd!: BlackList;
@@ -128,12 +113,34 @@ export class BlackListComponent {
         next: (data) => {
           console.log(data);
           this.getAllBlacklist();
-          this.snackBar.open("Succès", "modifié avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Modification opérée avec éclat."
+          });
           this.resetForm();
         },
         error: (err) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     } else {
@@ -142,12 +149,34 @@ export class BlackListComponent {
         next: (data) => {
           console.log(data);
           this.getAllBlacklist();
-          this.snackBar.open("Succès", "ajouté avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Adjonction réalisée avec un succès éclatant."
+          });
           this.resetForm();
         },
         error: (err) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     }
@@ -165,12 +194,34 @@ export class BlackListComponent {
     this.globalService.delete("blacklist", selectedBlackList.id!).subscribe(
       {
         next: () => {
-          this.snackBar.open("Succès","Suppresion effectue avec success.", {duration: 3000});
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Suppresion opérée avec éclat."
+          });
           this.getAllBlacklist();
         },
         error: (err) => {
           console.log(err);
-          this.snackBar.open("Erreur","Erreur lors de la suppression.", {duration: 3000});
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       }
     )

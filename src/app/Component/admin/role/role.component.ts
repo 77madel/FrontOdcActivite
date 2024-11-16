@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Router } from "@angular/router";
 import { Role, RoleServiceService } from '../../../core';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-role',
@@ -67,15 +68,37 @@ export class RoleComponent implements OnInit {
   async handleSubmit() {
     // Vérifier si le champ "nom" est vide
     if (!this.formData.nom) {
-      this.showError('Veuillez remplir tous les champs.');
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Veuillez remplir tous les champs.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
     // Confirmation avant l'enregistrement
-    const confirmRegistration = confirm(this.isEditMode ? 'Êtes-vous sûr de vouloir modifier cet élément ?' : 'Êtes-vous sûr de vouloir enregistrer cet utilisateur ?');
-    if (!confirmRegistration) {
-      return;
-    }
+    Swal.fire({
+      title: this.isEditMode ? 'Modification de l\'élément' : 'Enregistrement de l\'élément',
+      text: this.isEditMode
+        ? 'Êtes-vous sûr de vouloir modifier cet élément ?'
+        : 'Êtes-vous sûr de vouloir enregistrer cet élément ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // L'utilisateur a confirmé l'action
+        // Ajoutez ici votre logique
+      } else {
+        // L'utilisateur a annulé l'action
+        return;
+      }
+    });
 
     try {
       let response: any;
@@ -83,7 +106,21 @@ export class RoleComponent implements OnInit {
       if (this.isEditMode && this.currentRoleId) {
         // Si en mode édition, on modifie le rôle existant
         response = await this.roleServive.updateRole(this.currentRoleId, this.formData);
-        this.snackBar.open("Succes", "Role Modifier", {duration: 3000} );
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Modification opérée avec éclat."
+        });
 
         // Mise à jour du tableau local après modification
         this.role = this.role.map(role => role.id === this.currentRoleId ? response : role);
@@ -91,7 +128,21 @@ export class RoleComponent implements OnInit {
       } else {
         // Sinon, on ajoute un nouveau rôle
         response = await this.roleServive.role(this.formData);
-        this.snackBar.open("Succes", "Role ajouter avec succes", {duration: 3000});
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Adjonction réalisée avec un succès éclatant."
+        });
         // Ajouter le nouveau rôle au tableau local
         this.role.push(response);
       }
@@ -140,7 +191,14 @@ export class RoleComponent implements OnInit {
       //   this.showError('Aucune réponse du serveur');
       //   return;
       // }
-      this.snackBar.open("Succes", "Role supprimer", {duration: 3000});
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Eradication diligente pleinement consommée.',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true
+      });
 
 
     } catch (error) {

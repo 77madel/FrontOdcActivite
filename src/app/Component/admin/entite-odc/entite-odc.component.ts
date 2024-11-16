@@ -1,18 +1,15 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatInput} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import { Entite, EntiteOdcService, Utilisateur, Role, GlobalCrudService, RoleServiceService } from '../../../core';
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
-import {MatCheckbox} from "@angular/material/checkbox";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-entite-odc',
@@ -24,17 +21,13 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatIconModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInput,
     MatCardModule,
     FormsModule,
-    MatOption,
-    MatSelect,
-    MatCheckbox,
   ],
   templateUrl: './entite-odc.component.html',
   styleUrl: './entite-odc.component.css'
 })
-export class EntiteODCComponent {
+export class EntiteODCComponent implements OnInit {
   entiteList!: Entite[];
   selectedEntite!: Entite;
   entiteToAdd!: Entite;
@@ -196,7 +189,15 @@ export class EntiteODCComponent {
 
       formData.append('utilisateurId', this.selectedUtilisateur.id.toString()); // Utilisez l'ID de l'utilisateur
     } else {
-      console.error("Aucun utilisateur sélectionné ou ID non disponible.");
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Aucun utilisateur sélectionné ou ID non disponible.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       // Gérez l'erreur ou faites une action appropriée
       return; // Arrêtez l'exécution si aucun utilisateur n'est sélectionné
     }
@@ -207,12 +208,33 @@ export class EntiteODCComponent {
         next: (data) => {
           console.log(data);
           this.getAllEntite();
-          this.snackBar.open("Succès", "Modifié avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Modification opérée avec éclat."
+          });
           this.resetForm();
         },
         error: (err) => {
-          console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     } else {
@@ -221,12 +243,33 @@ export class EntiteODCComponent {
         next: (data) => {
           console.log(data);
           this.getAllEntite();
-          this.snackBar.open("Succès", "Ajouté avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Adjonction réalisée avec un succès éclatant."
+          });
           this.resetForm();
         },
         error: (err) => {
-          console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     }
@@ -245,12 +288,26 @@ export class EntiteODCComponent {
     this.globalService.delete("utilisateur", selectedEntite.id!).subscribe(
       {
         next: () => {
-          this.snackBar.open("Succès","Suppresion effectue avec success.", {duration: 3000});
+          Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: 'Eradication diligente pleinement consommée.',
+            timer: 3000,
+            showConfirmButton: false,
+            timerProgressBar: true
+          });
           this.getAllEntite();
         },
         error: (err) => {
-          console.log(err);
-          this.snackBar.open("Erreur","Erreur lors de la suppression.", {duration: 3000});
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       }
     )

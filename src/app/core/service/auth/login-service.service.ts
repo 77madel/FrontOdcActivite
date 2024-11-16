@@ -144,6 +144,7 @@ export class LoginServiceService {
     if (this.isBrowser()) {
       const roles = localStorage.getItem('roles');
       return roles ? JSON.parse(roles) : [];
+      console.log(roles)
     }
     return [];
   }

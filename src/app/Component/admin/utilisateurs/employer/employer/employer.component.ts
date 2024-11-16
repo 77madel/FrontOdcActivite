@@ -3,6 +3,7 @@ import { Utilisateur, GlobalCrudService, Role, RoleServiceService, Entite, Entit
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employer',
@@ -30,7 +31,7 @@ export class EmployerComponent implements OnInit {
   searchTerm: string = '';
   genre: string[] = ['Homme', 'Femme'];
 
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 12;
   currentPage: number = 1;
 
   constructor(
@@ -110,7 +111,15 @@ export class EmployerComponent implements OnInit {
 
   ajouterUtilisateur() {
     if (!this.utilisateurToAdd.role) {
-      this.snackBar.open("Erreur", "Veuillez sélectionner un rôle.", { duration: 3000 });
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Veuillez sélectionner un rôle.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
@@ -121,12 +130,33 @@ export class EmployerComponent implements OnInit {
     action.subscribe({
       next: () => {
         this.getAllUtilisateur();
-        this.snackBar.open("Succès", `Utilisateur ${this.isEditMode ? "modifié" : "ajouté"} avec succès.`, { duration: 3000 });
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: `${this.isEditMode ? "Modification opéré" : "Adjonction réalisée"} avec succès.`
+        });
         this.resetForm();
       },
       error: (err) => {
-        console.error(err);
-        this.snackBar.open("Erreur", `Erreur lors de ${this.isEditMode ? "la modification" : "l'ajout"} de l'utilisateur : ${err.error?.message || 'Erreur inconnue'}`, { duration: 3000 });
+        Swal.fire({
+          icon: 'error',
+          title: '<span class="text-red-500">Échec</span>',
+          text: 'Une erreur est survenue. Veuillez réessayer.',
+          confirmButtonText: 'Ok',
+          customClass: {
+            confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+          },
+        });
       }
     });
   }
@@ -140,12 +170,26 @@ export class EmployerComponent implements OnInit {
   supprimerUtilisateur(utilisateur: Utilisateur) {
     this.globalService.delete("utilisateur", utilisateur.id!).subscribe({
       next: () => {
-        this.snackBar.open("Succès", "Suppression effectuée avec succès.", { duration: 3000 });
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès',
+          text: 'Eradication diligente pleinement consommée.',
+          timer: 3000,
+          showConfirmButton: false,
+          timerProgressBar: true
+        });
         this.getAllUtilisateur();
       },
       error: (err) => {
-        console.error(err);
-        this.snackBar.open("Erreur", "Erreur lors de la suppression de l'utilisateur.", { duration: 3000 });
+        Swal.fire({
+          icon: 'error',
+          title: '<span class="text-red-500">Échec</span>',
+          text: 'Une erreur est survenue. Veuillez réessayer.',
+          confirmButtonText: 'Ok',
+          customClass: {
+            confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+          },
+        });
       }
     });
   }

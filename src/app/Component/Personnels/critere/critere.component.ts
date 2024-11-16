@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -11,8 +11,8 @@ import {MatInput} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule, MatOption} from "@angular/material/core";
-import {MatSelect} from "@angular/material/select";
 import {CritereService, Critere} from "../../../core";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-critere',
@@ -28,13 +28,11 @@ import {CritereService, Critere} from "../../../core";
     MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelect,
-    MatOption
   ],
   templateUrl: './critere.component.html',
   styleUrl: './critere.component.scss'
 })
-export class CritereComponent {
+export class CritereComponent implements OnInit {
 
   displayedColumns: string[] = ['libelle','intutile','point', 'actions'];
 
@@ -107,14 +105,36 @@ export class CritereComponent {
 
   async handleSubmit() {
     if (!this.formData.libelle || !this.formData.intutile || !this.formData.point) {
-      this.showError('Veuillez remplir tous les champs.');
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Veuillez remplir tous les champs.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
-    const confirmAction = confirm(this.isEditMode ? 'Êtes-vous sûr de vouloir modifier cet élément ?' : 'Êtes-vous sûr de vouloir enregistrer ?');
-    if (!confirmAction) {
-      return;
-    }
+    Swal.fire({
+      title: this.isEditMode ? 'Modification de l\'élément' : 'Enregistrement de l\'élément',
+      text: this.isEditMode
+        ? 'Êtes-vous sûr de vouloir modifier cet élément ?'
+        : 'Êtes-vous sûr de vouloir enregistrer cet élément ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // L'utilisateur a confirmé l'action
+        // Ajoutez ici votre logique
+      } else {
+        // L'utilisateur a annulé l'action
+        return;
+      }
+    });
 
     try {
       let response: any;
@@ -122,12 +142,40 @@ export class CritereComponent {
       if (this.isEditMode && this.currentRoleId) {
         // Modifier le critère existant
         response = await this.critereService.update(this.currentRoleId, this.formData);
-        this.snackBar.open("Modification réussie", "Fermer", { duration: 3000 });
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Modification opérée avec éclat."
+        });
         this.critere = this.critere.map(critere => critere.id === this.currentRoleId ? response : critere);
       } else {
         // Ajouter un nouveau critère
         response = await this.critereService.add(this.formData);
-        this.snackBar.open("Ajout réussi", "Fermer", { duration: 3000 });
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Adjonction réalisée avec un succès éclatant."
+        });
         this.critere.push(response);
       }
 
@@ -139,7 +187,15 @@ export class CritereComponent {
       this.isTableVisible = true;
 
     } catch (error) {
-      this.showError('Erreur lors de la soumission du formulaire.');
+      await Swal.fire({
+        icon: 'error',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Une erreur est survenue. Veuillez réessayer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
     }
   }
 
@@ -155,8 +211,6 @@ export class CritereComponent {
     this.isTableVisible = false; // Masquer le tableau
   }
 
-
-
   async fetchElements(): Promise<void> {
     try {
       const response = await this.critereService.get();
@@ -166,27 +220,48 @@ export class CritereComponent {
     }
   }
 
-
-
   async onDelete(id: number | undefined): Promise<void> {
-    const confirmDeletion = confirm('Êtes-vous sûr de vouloir supprimer ?');
-    if (!confirmDeletion) {
-      return;
-    }
+    Swal.fire({
+      title: 'Suppression de l\'élément',
+      text: 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // L'utilisateur a confirmé l'action
+        // Ajoutez ici votre logique
+      } else {
+        // L'utilisateur a annulé l'action
+        return;
+      }
+    });
 
     try {
       const response = await this.critereService.delete(id);
       this.critere = response;
       this.fetchElements();
-      this.snackBar.open("Succes", "supprimer", {duration: 3000});
-
-
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Eradication diligente pleinement consommée.',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true
+      });
     } catch (error) {
-      this.showError('Erreur lors de la suppression ');
+      Swal.fire({
+        icon: 'error',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Une erreur est survenue. Veuillez réessayer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
     }
   }
-
-
 
   showError(message: string) {
     this.errorMessage = message;
@@ -198,6 +273,4 @@ export class CritereComponent {
   ngOnInit(): void {
     this.fetchElements(); // Appel de la méthode pour récupérer les données au démarrage
   }
-
-
 }

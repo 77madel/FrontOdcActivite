@@ -11,29 +11,16 @@ import { NgForOf, NgIf } from "@angular/common";
 import { Etape, TypeActivite, EtapeService, Activity, Entite, GlobalCrudService, EntiteOdcService } from '../../../core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import {MatCheckbox} from "@angular/material/checkbox";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-activity',
   standalone: true,
   imports: [
     FormsModule,
-    MatButton,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatSelect,
     NgForOf,
     NgIf,
     ReactiveFormsModule,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatDatepicker,
-    MatCheckbox
   ],
   templateUrl: './activity.component.html',
   styleUrls: ['./activity.component.scss'] // Corrigé de styleUrl à styleUrls
@@ -94,8 +81,6 @@ export class ActivityComponent {
     }
   }
 
-
-
   constructor(
     private globalService: GlobalCrudService,
     private etapeService: EtapeService,
@@ -104,7 +89,6 @@ export class ActivityComponent {
   ) {
     this.activiteToAdd = new Activity();
   }
-
 
   ngOnInit(): void {
     this.getAllActivite();
@@ -225,12 +209,34 @@ export class ActivityComponent {
       };
     });
 
-    console.log('Étapes mises à jour dans l\'activité:', this.activiteToAdd.etape);
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Modification opérée avec éclat."
+    });
   }
 
   ajouterActivity() {
     if (!this.activiteToAdd.entite) {
-      this.snackBar.open("Erreur", "Veuillez sélectionner une entité.", { duration: 3000 });
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Veuillez sélectionner une entité.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
@@ -267,11 +273,25 @@ export class ActivityComponent {
             }
             this.submitActivity();
           }).catch(error => {
-            console.error('Erreur lors de l\'ajout des étapes:', error);
-            this.snackBar.open("Erreur", "Erreur lors de l'ajout des étapes.", { duration: 3000 });
+            Swal.fire({
+              icon: 'error',
+              title: '<span class="text-red-500">Échec</span>',
+              text: 'Une erreur est survenue. Veuillez réessayer.',
+              confirmButtonText: 'Ok',
+              customClass: {
+                confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+              },
+            });
           });
         } else {
-          this.snackBar.open("Info", "Toutes les étapes sélectionnées sont déjà ajoutées.", { duration: 3000 });
+          Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: 'Toutes les étapes sélectionnées sont déjà ajoutées.',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
           this.submitActivity();
         }
       } else {
@@ -285,7 +305,15 @@ export class ActivityComponent {
 
   submitActivity() {
     if (this.isModificationMode && (!this.activiteToAdd.etape || this.activiteToAdd.etape.length === 0)) {
-      this.snackBar.open("Erreur", "Veuillez sélectionner au moins une étape pour la modification.", {duration: 3000});
+      Swal.fire({
+        icon: 'error',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Veuillez sélectionner au moins une étape pour la modification.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
@@ -294,12 +322,34 @@ export class ActivityComponent {
         next: (data: any) => {
           console.log(data);
           this.getAllActivite();
-          this.snackBar.open("Succès", "Activité modifiée avec succès.", {duration: 3000});
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Modification opérée avec éclat."
+          });
           this.resetForm();
         },
         error: (err: { error: { message: any; }; }) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification de l'activité : " + (err.error?.message || 'Erreur inconnue'), {duration: 3000});
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     } else {
@@ -307,12 +357,34 @@ export class ActivityComponent {
         next: (data: any) => {
           console.log(data);
           this.getAllActivite();
-          this.snackBar.open("Succès", "Activité ajoutée avec succès.", {duration: 3000});
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Adjonction réalisée avec un succès éclatant."
+          });
           this.resetForm();
         },
         error: (err: { error: { message: any; }; }) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout de l'activité : " + (err.error?.message || 'Erreur inconnue'), {duration: 3000});
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     }
@@ -332,12 +404,27 @@ export class ActivityComponent {
   supprimerActivite(selectedActivite: Activity) {
     this.globalService.delete("activite", selectedActivite.id!).subscribe({
       next: () => {
-        this.snackBar.open("Succès", "Suppression effectuée avec succès.", { duration: 3000 });
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès',
+          text: 'Eradication diligente pleinement consommée.',
+          timer: 3000,
+          showConfirmButton: false,
+          timerProgressBar: true
+        });
         this.getAllActivite();
       },
       error: (err: any) => {
         console.log(err);
-        this.snackBar.open("Erreur", "Erreur lors de la suppression.", { duration: 3000 });
+        Swal.fire({
+          icon: 'error',
+          title: '<span class="text-red-500">Échec</span>',
+          text: 'Une erreur est survenue. Veuillez réessayer.',
+          confirmButtonText: 'Ok',
+          customClass: {
+            confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+          },
+        });
       }
     });
   }

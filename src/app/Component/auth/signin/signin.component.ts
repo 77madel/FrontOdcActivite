@@ -1,14 +1,10 @@
 import { Component, Inject, NgZone,ChangeDetectorRef, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatIcon } from '@angular/material/icon';
+import Swal from 'sweetalert2';
 import { FormsModule } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {isPlatformBrowser, NgIf, NgOptimizedImage} from '@angular/common';
 import { LoginServiceService } from '../../../core';
-import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-signin',
@@ -61,7 +57,21 @@ export class SigninComponent implements OnInit {
           this.router.navigateByUrl('/main').then(() => {
             this.cdRef.detectChanges();
           });
-          this.snackBar.open("Connexion réussie.", "Succès", { duration: 4000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "L’entrelacement de vos identifiants a triomphalement abouti"
+          });
         } else {
           this.snackBar.open("Aucun token reçu dans la réponse.", "Erreur", { duration: 4000 });
         }
@@ -69,8 +79,15 @@ export class SigninComponent implements OnInit {
         this.resetForm();
       },
       error: error => {
-        console.error('Erreur de connexion :', error);
-        this.snackBar.open("Nom d'utilisateur ou mot de passe incorrect", "Erreur", { duration: 4000 });
+        Swal.fire({
+          icon: 'error',
+          title: '<span class="text-orange-500">Erreur d\'authentification</span>',
+          html: '<p class="text-orange-500">L’identifiant ou le cryptonyme fourni ne concorde point avec les enregistrements consignés dans nos registres sécurisés. Veuillez vérifier l’exactitude des informations saisies et réitérer votre tentative.</p>',
+          confirmButtonText: 'Réessayer',
+          customClass: {
+            confirmButton: 'bg-orange-500 text-white hover:bg-orange-600',
+          },
+        });
         this.resetForm();
       }
     });

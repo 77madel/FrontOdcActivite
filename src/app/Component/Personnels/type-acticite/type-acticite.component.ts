@@ -1,34 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TypeActivite, GlobalCrudService} from "../../../core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
 import {NgForOf, NgIf} from "@angular/common";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-type-acticite',
   standalone: true,
   imports: [
     FormsModule,
-    MatButton,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatSelect,
     NgForOf,
     NgIf,
     ReactiveFormsModule
@@ -36,7 +17,7 @@ import {NgForOf, NgIf} from "@angular/common";
   templateUrl: './type-acticite.component.html',
   styleUrl: './type-acticite.component.scss'
 })
-export class TypeActiciteComponent {
+export class TypeActiciteComponent implements OnInit {
   typeActiviteList!: TypeActivite[];
   selectedtypeActivite!: TypeActivite;
   typeActiviteToAdd!: TypeActivite;
@@ -131,12 +112,34 @@ export class TypeActiciteComponent {
       this.globalService.update("typeActivite", this.typeActiviteToAdd.id!, this.typeActiviteToAdd).subscribe({
         next: (data: any) => {
           this.getAllType();
-          this.snackBar.open("Succès", "Modifié avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Modification opérée avec éclat."
+          });
           this.resetForm();
         },
         error: (err) => {
           console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de la modification : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     } else {
@@ -145,12 +148,33 @@ export class TypeActiciteComponent {
         next: (data: any) => {
           console.log("Réponse de l'ajout", data);
           this.getAllType();
-          this.snackBar.open("Succès", "Ajouté avec succès.", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Adjonction réalisée avec un succès éclatant."
+          });
           this.resetForm();
         },
         error: (err) => {
-          console.error(err);
-          this.snackBar.open("Erreur", "Erreur lors de l'ajout : " + (err.error?.message || 'Erreur inconnue'), { duration: 3000 });
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       });
     }
@@ -168,12 +192,26 @@ export class TypeActiciteComponent {
     this.globalService.delete("typeActivite", selectedtypeActivite.id!).subscribe(
       {
         next: () => {
-          this.snackBar.open("Succès","Suppresion effectue avec success.", {duration: 3000});
+          Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: 'Eradication diligente pleinement consommée.',
+            timer: 3000,
+            showConfirmButton: false,
+            timerProgressBar: true
+          });
           this.getAllType();
         },
         error: (err: any) => {
-          console.log(err);
-          this.snackBar.open("Erreur","Erreur lors de la suppression.", {duration: 3000});
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       }
     )

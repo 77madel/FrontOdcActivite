@@ -83,7 +83,4 @@ export class EtapeService {
 
     return this.http.post(url, formData);
   }
-
-
-
 }

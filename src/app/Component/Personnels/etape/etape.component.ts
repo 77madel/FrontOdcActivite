@@ -13,6 +13,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule, MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
+import Swal from 'sweetalert2';
 
 interface EtapeDTO {
   id: number;
@@ -141,17 +142,36 @@ export class EtapeComponent implements OnInit {
     console.log("Formulaire soumis :", this.addElementForm.value);
 
     if (this.addElementForm.invalid) {
-      this.showError('Veuillez remplir tous les champs.');
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Veuillez remplir tous les champs.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
-    const confirmMessage = this.isEditMode
-      ? 'Êtes-vous sûr de vouloir modifier cet élément ?'
-      : 'Êtes-vous sûr de vouloir enregistrer ?';
-
-    if (!confirm(confirmMessage)) {
-      return;
-    }
+    Swal.fire({
+      title: this.isEditMode ? 'Modification de l\'élément' : 'Enregistrement de l\'élément',
+      text: this.isEditMode
+        ? 'Êtes-vous sûr de vouloir modifier cet élément ?'
+        : 'Êtes-vous sûr de vouloir enregistrer cet élément ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // L'utilisateur a confirmé l'action
+        // Ajoutez ici votre logique
+      } else {
+        // L'utilisateur a annulé l'action
+        return;
+      }
+    });
 
     try {
       const formData: Etape = this.addElementForm.value;
@@ -168,9 +188,31 @@ export class EtapeComponent implements OnInit {
           this.etapes = this.etapes.map(etape =>
             etape.id === this.currentEtapeId ? response as Etape : etape
           );
-          this.snackBar.open("Succès", "Modification réussie", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Modification opérée avec éclat."
+          });
         } else {
-          this.showError("Erreur lors de la mise à jour de l'étape.");
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       } else {
         // Ajout d'une nouvelle étape
@@ -178,9 +220,31 @@ export class EtapeComponent implements OnInit {
         console.log("Réponse d'ajout :", response);
         if (Array.isArray(response)) {
           this.etapes.push(...response);
-          this.snackBar.open("Succès", "Ajout avec succès", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Adjonction réalisée avec un succès éclatant."
+          });
         } else {
-          this.showError("Erreur lors de l'ajout des étapes.");
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
         }
       }
 
@@ -190,8 +254,15 @@ export class EtapeComponent implements OnInit {
       this.isEditMode = false; // Réinitialiser le mode d'édition
       this.currentEtapeId = 0; // Réinitialiser l'ID après modification
     } catch (error: any) {
-      console.error("Erreur lors de l'ajout ou de la modification:", error);
-      this.showError("Une erreur s'est produite : " + error.message);
+      await Swal.fire({
+        icon: 'error',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Une erreur est survenue. Veuillez réessayer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
     }
   }
 
@@ -240,16 +311,44 @@ export class EtapeComponent implements OnInit {
   }
 
   async onDelete(id: number | undefined): Promise<void> {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-      return;
-    }
+    Swal.fire({
+      title: 'Suppression de l\'élément',
+      text: 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // L'utilisateur a confirmé l'action
+        // Ajoutez ici votre logique
+      } else {
+        // L'utilisateur a annulé l'action
+        return;
+      }
+    });
 
     try {
       await this.etapeService.delete(id);
-      this.snackBar.open("Succès", "Supprimé", { duration: 3000 });
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Eradication diligente pleinement consommée.',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true
+      });
       this.fetchElements();
     } catch (error) {
-      this.showError('Erreur lors de la suppression.');
+      Swal.fire({
+        icon: 'error',
+        title: '<span class="text-red-500">Échec</span>',
+        text: 'Une erreur est survenue. Veuillez réessayer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
     }
   }
 
@@ -263,14 +362,30 @@ export class EtapeComponent implements OnInit {
 
   uploadParticipants(id: number, toListeDebut: boolean) {
     if (id === 0) {
-      console.error('Erreur : ID de l\'étape est 0, impossible de continuer');
-      this.errorMessage = 'ID de l\'étape invalide.';
+      //console.error('Erreur : ID de l\'étape est 0, impossible de continuer');
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'ID de l\'étape invalide',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
     // Vérifiez si un upload est déjà en cours
     if (this.uploading) {
-      console.warn('Un upload est déjà en cours, veuillez attendre.');
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Un upload est déjà en cours, veuillez attendre.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
       return;
     }
 
@@ -279,7 +394,21 @@ export class EtapeComponent implements OnInit {
 
       this.etapeService.uploadParticipants(id, this.selectedFile, toListeDebut).subscribe({
         next: () => {
-          this.snackBar.open("Succès", "Participants ajoutés avec succès", { duration: 3000 });
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Participants ajoutés avec succès"
+          });
           this.fetchElements(); // Met à jour la liste des étapes
 
           // Réinitialiser le fichier sélectionné
@@ -292,17 +421,30 @@ export class EtapeComponent implements OnInit {
           this.uploading = false; // Fin de l'upload
         },
         error: (err) => {
-          console.error('Erreur lors de l\'ajout des participants', err);
-          this.errorMessage = err.error?.message || 'Erreur lors de l\'ajout des participants. Veuillez réessayer.';
+          Swal.fire({
+            icon: 'error',
+            title: '<span class="text-red-500">Échec</span>',
+            text: 'Une erreur est survenue. Veuillez réessayer.',
+            confirmButtonText: 'Ok',
+            customClass: {
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+            },
+          });
           this.uploading = false; // Fin de l'upload même en cas d'erreur
         }
       });
     } else {
-      console.error('Aucun fichier sélectionné');
-      this.errorMessage = 'Veuillez sélectionner un fichier avant de continuer.';
+      Swal.fire({
+        icon: 'info',
+        title: '<span class="text-orange-500">Info</span>',
+        text: 'Veuillez sélectionner un fichier avant de continuer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        },
+      });
     }
   }
-
 
   showError(message: string) {
     this.errorMessage = message;
@@ -310,8 +452,6 @@ export class EtapeComponent implements OnInit {
       this.errorMessage = '';
     }, 3000);
   }
-
-
 }
 
 

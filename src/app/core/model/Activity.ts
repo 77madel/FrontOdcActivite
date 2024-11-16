@@ -14,4 +14,11 @@ export class Activity{
   etape?: Etape[];
   entite?: Entite;
   typeActivite?: TypeActivite;
+
+  constructor(data?: Partial<Activity>) {
+    if (data) {
+      Object.assign(this, data);
+      this.etape = Array.isArray(data.etape) ? data.etape : data.etape ? [data.etape] : [];
+    }
+  }
 }

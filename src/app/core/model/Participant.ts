@@ -11,6 +11,8 @@ export class Participant {
   genre?: string;
   activite?: Activity;// Permettre que ce soit null
   isBlacklisted?: boolean;
+  checkedIn?: boolean;
+  checkInTime?: Date | null;
 }
 
 
@@ -21,6 +23,8 @@ export interface Participant {
   email?: string;
   phone?: string;
   genre?: string;
-  checkedIn: boolean;
-  checkInTime: Date | null;
+  activite?: Activity; // Permettre que ce soit null
+  isBlacklisted?: boolean;
+  checkedIn?: boolean;
+  checkInTime?: Date | null;
 }

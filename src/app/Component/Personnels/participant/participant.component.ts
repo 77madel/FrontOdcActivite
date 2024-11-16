@@ -7,10 +7,12 @@ import {
   Etape,
   EtapeService
 } from '../../../core';
-import {FormBuilder, FormGroup, FormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-participant',
@@ -20,7 +22,7 @@ import { HttpClient } from '@angular/common/http';
     NgClass,
     NgForOf,
     NgIf,
-    FormsModule
+    ReactiveFormsModule
   ],
   styleUrls: ['./participant.component.scss']
 })
@@ -28,31 +30,21 @@ export class ParticipantComponent implements OnInit {
   // Colonnes affichées dans la table
   displayedColumns: string[] = ['nom', 'prenom', 'email', 'phone', 'genre', 'Activite', 'actions'];
 
-  // Données du formulaire (si nécessaire)
-  formData: any = {
-    nom: '',
-    prenom: '',
-    email: '',
-    phone: '',
-    genre: '',
-    activite: Activity
-  };
-
   // Liste des participants
   participants: Participant[] = [];
+  filteredParticipants: Participant[] = [];
+
   // Liste des activités
   activites: Activity[] = [];
+
   // Liste des étapes filtrées en fonction de l'activité sélectionnée
   filteredEtapes: Etape[] = [];
+
   // Toutes les étapes
   allEtapes: Etape[] = [];
 
-  // Variables pour les filtres
-  searchTerm: string = '';
-  searchActivite: number | undefined = undefined;
-  searchEtape: string = '';
-  searchListType: string = '';
-  isEtapeSelected: boolean = false;
+  // Formulaire de filtres
+  filtersForm: FormGroup;
 
   // Pagination
   itemsPerPage = 10;
@@ -85,17 +77,42 @@ export class ParticipantComponent implements OnInit {
     this.addElementForm = this.fb.group({
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       genre: ['', Validators.required],
       activites: ['', Validators.required]
     });
+
+    // Initialisation du formulaire de filtres
+    this.filtersForm = this.fb.group({
+      searchTerm: [''],
+      searchActivite: [''],
+      searchEtape: [''],
+      searchListType: ['']
+    });
   }
 
   ngOnInit(): void {
-    this.fetchParticipants();
-    this.fetchActivites();
-    this.fetchEtapes();
+    // Utiliser async/await pour s'assurer de l'ordre de récupération
+    this.initializeData();
+
+    // Abonnement aux changements du formulaire de filtres
+    this.filtersForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(filters => this.applyFilters(filters))
+      )
+      .subscribe(filteredParticipants => {
+        this.filteredParticipants = filteredParticipants;
+        this.currentPage = 1;
+      });
+  }
+
+  async initializeData() {
+    await this.fetchEtapes();
+    await this.fetchActivites();
+    await this.fetchParticipants();
     this.fetchBlacklistedParticipants();
   }
 
@@ -103,11 +120,14 @@ export class ParticipantComponent implements OnInit {
   async fetchParticipants() {
     try {
       const response = await this.participantService.get();
-      this.participants = response.map((participant: Participant) => ({
+      this.participants = response.map((participant: any) => ({
         ...participant,
         activite: participant.activite || null,
         isBlacklisted: this.checkIfBlacklisted(participant)
       }));
+
+      // Initialisation des participants filtrés
+      this.filteredParticipants = [...this.participants];
     } catch (error: any) {
       this.snackBar.open(error.message, 'Fermer', { duration: 3000 });
     }
@@ -116,8 +136,16 @@ export class ParticipantComponent implements OnInit {
   fetchBlacklistedParticipants(): void {
     this.globalService.get('blacklist').subscribe({
       next: (data) => {
-        this.blacklistedEmails = data.map((item: { email: any }) => item.email);
+        this.blacklistedEmails = data.map((item: { email: any }) => item.email.toLowerCase());
         this.blacklistedPhones = data.map((item: { phone: any }) => item.phone);
+        // Après avoir récupéré la blacklist, mettre à jour les participants
+        this.participants = this.participants.map((participant) => ({
+          ...participant,
+          isBlacklisted: this.checkIfBlacklisted(participant)
+        }));
+
+        // Mettre à jour les participants filtrés
+        this.filteredParticipants = [...this.participants];
       },
       error: (err) => {
         this.snackBar.open('Erreur lors de la récupération des participants blacklistés.', 'Fermer', { duration: 3000 });
@@ -126,18 +154,24 @@ export class ParticipantComponent implements OnInit {
   }
 
   checkIfBlacklisted(participant: Participant): boolean {
-    const isEmailBlacklisted = this.blacklistedEmails.includes(participant.email!.toLowerCase());
-    const isPhoneBlacklisted = this.blacklistedPhones.includes(participant.phone!);
+    const isEmailBlacklisted = participant.email ? this.blacklistedEmails.includes(participant.email.toLowerCase()) : false;
+    const isPhoneBlacklisted = participant.phone ? this.blacklistedPhones.includes(participant.phone) : false;
     return isEmailBlacklisted || isPhoneBlacklisted;
   }
 
   fetchActivites() {
     this.globalService.get('activite').subscribe({
       next: (value) => {
-        this.activites = value;
+        // Normalisation de 'etape' pour qu'il soit toujours un tableau
+        this.activites = value.map((activite: any) => ({
+          ...activite,
+          etape: Array.isArray(activite.etape) ? activite.etape : activite.etape ? [activite.etape] : []
+        }));
+        console.log('Activités normalisées :', this.activites);
       },
       error: (err) => {
         console.log(err);
+        this.snackBar.open('Erreur lors de la récupération des activités.', 'Fermer', { duration: 3000 });
       }
     });
   }
@@ -145,65 +179,87 @@ export class ParticipantComponent implements OnInit {
   async fetchEtapes(): Promise<void> {
     try {
       const response = await this.etapeService.get();
-      this.allEtapes = response;
+      this.allEtapes = response || [];
+      console.log('Étapes récupérées :', this.allEtapes);
+
+      // Initialiser filteredEtapes avec toutes les étapes par défaut
+      this.filteredEtapes = [...this.allEtapes];
     } catch (error) {
+      console.error('Erreur lors de la récupération des étapes :', error);
       this.snackBar.open('Erreur lors de la récupération des étapes.', 'Fermer', { duration: 4000 });
     }
   }
 
   // Gestion des filtres
   onActiviteChange(): void {
-    // Mettre à jour les étapes filtrées en fonction de l'activité sélectionnée
-    const selectedActivite = this.activites.find((a) => a.id === Number(this.searchActivite));
-    this.filteredEtapes = selectedActivite ? selectedActivite.etape || [] : [];
-    // Réinitialiser l'étape et le type de liste
-    this.searchEtape = '';
-    this.searchListType = '';
-    this.isEtapeSelected = false;
+    const selectedActiviteId = this.filtersForm.value.searchActivite;
+    if (selectedActiviteId) {
+      const selectedActivite = this.activites.find((a) => a.id === Number(selectedActiviteId));
+      console.log('Activité sélectionnée :', selectedActivite);
+
+      this.filteredEtapes = selectedActivite && selectedActivite.etape ? selectedActivite.etape : [];
+      console.log('Étapes filtrées :', this.filteredEtapes);
+    } else {
+      // Si aucune activité n'est sélectionnée, afficher toutes les étapes
+      this.filteredEtapes = [...this.allEtapes];
+      console.log('Aucune activité sélectionnée, affichage de toutes les étapes :', this.filteredEtapes);
+    }
+
+    // Réinitialiser les autres filtres liés
+    this.filtersForm.patchValue({ searchEtape: '', searchListType: '' }, { emitEvent: false });
   }
 
   onEtapeChange(): void {
-    this.isEtapeSelected = !!this.searchEtape;
-    if (!this.isEtapeSelected) {
-      this.searchListType = '';
+    if (!this.filtersForm.value.searchEtape) {
+      this.filtersForm.patchValue({ searchListType: '' }, { emitEvent: false });
     }
   }
 
-  // Filtrage des participants
-  get filteredParticipants(): Participant[] {
-    return this.participants.filter((participant) => {
-      // Filtrage par nom, prénom ou téléphone
-      const searchMatches =
-        !this.searchTerm ||
-        participant.nom!.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        participant.prenom!.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        participant.phone!.includes(this.searchTerm);
+  // Nouvelle méthode de filtrage avancée
+  applyFilters(filters: any) {
+    let filtered = [...this.participants];
 
-      // Filtrage par activité
-      const activiteMatches =
-        !this.searchActivite || (participant.activite && participant.activite.id === Number(this.searchActivite));
+    // Filtrage par terme de recherche
+    if (filters.searchTerm) {
+      const term = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(participant =>
+        (participant.nom && participant.nom.toLowerCase().includes(term)) ||
+        (participant.prenom && participant.prenom.toLowerCase().includes(term)) ||
+        (participant.phone && participant.phone.includes(term))
+      );
+    }
 
-      // Filtrage par étape
-      const etapeMatches =
-        !this.searchEtape ||
-        (participant.activite &&
-          participant.activite.etape!.some((etape: Etape) => etape.nom === this.searchEtape));
+    // Filtrage par activité
+    if (filters.searchActivite) {
+      filtered = filtered.filter(participant =>
+        participant.activite && participant.activite.id === Number(filters.searchActivite)
+      );
+    }
 
-      // Filtrage par liste
-      const listeMatches =
-        !this.searchListType ||
-        (participant.activite &&
-          participant.activite.etape!.some((etape: Etape) => {
-            if (this.searchListType === 'listeDebut') {
-              return etape.listeDebut; // Vérifie que `listeDebut` est true
-            } else if (this.searchListType === 'listeResultat') {
-              return etape.listeResultat; // Vérifie que `listeResultat` est true
-            }
-            return false;
-          }));
+    // Filtrage par étape
+    if (filters.searchEtape) {
+      filtered = filtered.filter(participant =>
+        participant.activite?.etape &&
+        participant.activite.etape.some((etape: Etape) => etape.nom === filters.searchEtape)
+      );
+    }
 
-      return searchMatches && activiteMatches && etapeMatches && listeMatches;
-    });
+    // Filtrage par liste
+    if (filters.searchListType) {
+      filtered = filtered.filter(participant =>
+        participant.activite?.etape &&
+        participant.activite.etape.some((etape: Etape) => {
+          if (filters.searchListType === 'listeDebut') {
+            return etape.listeDebut && etape.listeDebut.length > 0;
+          } else if (filters.searchListType === 'listeResultat') {
+            return etape.listeResultat && etape.listeResultat.length > 0;
+          }
+          return false;
+        })
+      );
+    }
+
+    return of(filtered);
   }
 
   // Pagination
@@ -229,7 +285,7 @@ export class ParticipantComponent implements OnInit {
   }
 
   // Gestion du check-in
-  onCheckInChange(participant: any, event: Event) {
+  onCheckInChange(participant: Participant, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
     if (checked) {
@@ -243,6 +299,7 @@ export class ParticipantComponent implements OnInit {
         (response) => {
           console.log('Check-in réussi:', response);
           participant.checkedIn = true;
+          participant.checkInTime = new Date(); // Enregistrer l'heure du check-in
         },
         (error) => {
           console.error('Erreur lors du check-in:', error);
@@ -252,6 +309,7 @@ export class ParticipantComponent implements OnInit {
       );
     } else {
       participant.checkedIn = false;
+      participant.checkInTime = null;
     }
   }
 }
