@@ -9,6 +9,8 @@ export class Etape {
   listeResultat?: Participant[]; // Doit être un tableau
   statut?: string;
   critere?: Critere;
+  dateDebut?: Date;
+  dateFin?: Date;
   selected?: boolean;
 
   constructor(data?: Partial<Etape>) {

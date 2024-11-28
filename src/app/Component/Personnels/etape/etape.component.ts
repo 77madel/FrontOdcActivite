@@ -62,6 +62,8 @@ export class EtapeComponent implements OnInit {
   statutOptions: string[] = ['En_Attente', 'En_Cours', 'Termine'];
   etapes: Etape[] = [];
   criteres: Critere[] = [];
+  dateDebut?: Date;
+  dateFin?: Date;
 
   itemsPerPage = 5;
   currentPage = 1;
@@ -75,7 +77,9 @@ export class EtapeComponent implements OnInit {
   ) {
     this.addElementForm = this.fb.group({
       nom: ['', Validators.required],
-      statut: ['', Validators.required],
+      // statut: ['', Validators.required],
+      dateDebut: ['', Validators.required],
+      dateFin: ['', Validators.required],
       critere: ['', Validators.required],
     });
   }
