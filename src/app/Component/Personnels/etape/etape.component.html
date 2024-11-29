@@ -47,15 +47,6 @@
                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />
         </div>
 
-<!--        <div>-->
-<!--          <label for="statut" class="block text-gray-700 font-bold mb-1">Statut</label>-->
-<!--          <select id="statut" name="statut" formControlName="statut"-->
-<!--                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"-->
-<!--                  required>-->
-<!--            <option *ngFor="let statut of statutOptions" [value]="statut">{{ statut }}</option>-->
-<!--          </select>-->
-<!--        </div>-->
-
         <button type="submit" class="w-full bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 focus:outline-none">
           {{ isEditMode ? 'Modifier' : 'Ajouter' }}
         </button>
@@ -133,11 +124,43 @@
             <button (click)="openUploadForm(element.id, element.nom)" class="text-green-500 hover:text-green-700" aria-label="Upload Participants">
               <i class="fas fa-upload"></i>
             </button>
-            <button class="text-yellow-500 hover:text-yellow-600" aria-label="Upload Participants">
+<!--            <button (click)="toggleListVisibility(element.id)"-->
+<!--                    class="text-yellow-500 hover:text-yellow-600"-->
+<!--                    aria-label="Show List">-->
+<!--              <i class="fas fa-file"></i>-->
+<!--            </button>-->
+            <button *ngIf="element.listeDebut?.length"
+                    [routerLink]="['/liste-debut', element.id]"
+                    class="text-yellow-500 hover:text-yellow-600"
+                    aria-label="Show List">
               <i class="fas fa-file"></i>
             </button>
+            <button *ngIf="element.listeResultat?.length"
+                    [routerLink]="['/liste-resultat', element.id]"
+                    class="text-black-500 hover:text-black-600"
+                    aria-label="Show List">
+              <i class="fas fa-file"></i>
+            </button>
+
           </td>
+
+<!--          <td *ngIf="element.id !== undefined && (element.listeDebut?.length || element.listeResultat?.length)" colspan="3" class="bg-gray-100 px-6 py-4">-->
+<!--            <div *ngIf="element.listeDebut?.length">-->
+<!--              <h4 class="font-semibold text-gray-700">Liste Début :</h4>-->
+<!--              <ul class="list-disc ml-5">-->
+<!--                <li *ngFor="let item of element.listeDebut">{{ item.email }}</li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--            <div *ngIf="element.listeResultat?.length">-->
+<!--              <h4 class="font-semibold text-gray-700 mt-2">Liste Résultat :</h4>-->
+<!--              <ul class="list-disc ml-5">-->
+<!--                <li *ngFor="let item of element.listeResultat">{{ item }}</li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--          </td>-->
+
         </tr>
+
         </tbody>
       </table>
     </div>

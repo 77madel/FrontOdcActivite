@@ -1,0 +1,60 @@
+<div class="p-12">
+  <!-- Section des boutons -->
+  <div class="flex items-center gap-6 text-2xl mb-6 font-bold tracking-normal text-white">
+    <div class="flex flex-col grow items-start bg-orange-400 rounded-3xl w-fit">
+      <div class="px-5 pb-0 bg-black rounded-3xl">
+        Liste Resultat pour Etape {{nomEtape}}
+      </div>
+    </div>
+  </div>
+  <!-- Table (affichée uniquement si isTableVisible est vrai) -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border-collapse">
+        <!-- Table header -->
+        <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Nom</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Prenom</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Genre</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Phone</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Activite</th>
+        </tr>
+        </thead>
+
+        <!-- Table body -->
+        <tbody class="bg-white">
+        <tr *ngFor="let element of listeResultat">
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.nom }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.prenom }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.email }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.genre }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.phone }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ element.activite.nom }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!--      &lt;!&ndash; Message si aucune donnée n'est disponible &ndash;&gt;-->
+      <!--      <div *ngIf="listeDebut && listeDebut.length === 0" class="text-center mt-4 text-gray-500">-->
+      <!--        <p>Aucune donnée disponible pour le moment.</p>-->
+      <!--      </div>-->
+    </div>
+
+    <!-- Pagination -->
+    <!--    <div class="flex justify-center mt-4">-->
+    <!--      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">-->
+    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
+    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />-->
+    <!--        </svg>-->
+    <!--      </button>-->
+    <!--      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>-->
+    <!--      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">-->
+    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
+    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />-->
+    <!--        </svg>-->
+    <!--      </button>-->
+    <!--    </div>-->
+  </div>
+</div>

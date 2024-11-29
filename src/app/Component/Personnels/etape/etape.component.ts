@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Etape, EtapeService, Critere, CritereService, Activity, GlobalCrudService } from '../../../core';
 import { CommonModule } from "@angular/common";
@@ -39,7 +39,8 @@ interface EtapeDTO {
     MatSelectModule,
     MatOptionModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './etape.component.html',
   styleUrls: ['./etape.component.scss']
@@ -64,6 +65,14 @@ export class EtapeComponent implements OnInit {
   criteres: Critere[] = [];
   dateDebut?: Date;
   dateFin?: Date;
+
+  visibleLists: { [key: number]: boolean } = {};
+
+  toggleListVisibility(id: number | undefined): void {
+    if (id !== undefined) {
+      this.visibleLists[id] = !this.visibleLists[id];
+    }
+  }
 
   itemsPerPage = 5;
   currentPage = 1;

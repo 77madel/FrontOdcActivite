@@ -99,6 +99,16 @@ export const routes: Routes = [
     loadComponent: () => import('./Component/Personnels/type-acticite/type-acticite.component').then(c => c.TypeActiciteComponent),
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'liste-debut/:id',
+    loadComponent: () => import('./Component/Personnels/etape/liste-debut/liste-debut.component').then(c => c.ListeDebutComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'liste-resultat/:id',
+    loadComponent: () => import('./Component/Personnels/etape/liste-resultat/liste-resultat.component').then(c => c.ListeResultatComponent),
+    canActivate: [AuthGuardService]
+  },
   // Routes d'erreur
   {
     path: 'access-denied',

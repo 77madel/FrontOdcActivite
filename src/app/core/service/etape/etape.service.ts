@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { Activity } from '../../model/Activity';
 import { Etape } from '../../model/Etape';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,22 @@ export class EtapeService {
       throw error; // Vous pouvez gérer l'erreur ici si nécessaire
     }
   }
+
+  // private etape: any[] = [];
+  //
+  // setEtapes(etape: any[]): void {
+  //   this.etape = etape;
+  // }
+  //
+  // getEtapeById(id: number): any {
+  //   return this.etape.find((etape: any) => etape.id === id);
+  // }
+
+  getEtapeByIdFromApi(id: number): Observable<any> {
+    return this.http.get<any>(`${this.BASE_URL}/etape/liste/${id}`);
+  }
+
+
 
 
   async get():Promise<any>{
