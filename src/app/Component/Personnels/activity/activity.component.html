@@ -120,6 +120,7 @@
         <th class="p-3">Objectif Participant</th>
         <th class="p-3">Entité</th>
         <th class="p-3">Type Activité</th>
+        <th class="p-3">Statut</th>
         <th class="p-3">Actions</th>
         <th class="p-3"></th>
       </tr>
@@ -132,6 +133,17 @@
         <td class="p-3">{{ element.objectifParticipation }}</td>
         <td class="p-3">{{ element.entite?.nom }}</td>
         <td class="p-3">{{ element.typeActivite?.type }}</td>
+
+        <td class="p-3">
+            <span class="px-3 py-1 rounded-full text-white text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-blue-500': element.statut === 'En_Attente',
+                    'bg-green-500': element.statut === 'En_Cours',
+                    'bg-red-500': element.statut === 'Termine'
+                  }">
+              {{ element.statut }}
+            </span>
+        </td>
         <td class="p-3 flex gap-2">
           <button  class="text-bg-dark hover:text-orange-500">
             <i class="fas fa-eye"></i>
@@ -145,7 +157,7 @@
         </td>
 
         <!-- Message si aucune étape n'est disponible pour l'activité -->
-        <td *ngIf="!element.etape || element.etape.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400 blink text-red-500">
+        <td *ngIf="!element.etape || element.etape.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-red-500 dark:text-red-400 blink text-red-500">
           Cette activité n'a pas d'étapes.
         </td>
       </tr>

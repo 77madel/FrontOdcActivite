@@ -7,7 +7,7 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption } from "@angular/material/autocomplete";
 import { MatSelect } from "@angular/material/select";
-import { NgForOf, NgIf } from "@angular/common";
+import { CommonModule, NgForOf, NgIf } from "@angular/common";
 import { Etape, TypeActivite, EtapeService, Activity, Entite, GlobalCrudService, EntiteOdcService } from '../../../core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import {MatCheckbox} from "@angular/material/checkbox";
@@ -21,11 +21,14 @@ import Swal from 'sweetalert2';
     NgForOf,
     NgIf,
     ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './activity.component.html',
   styleUrls: ['./activity.component.scss'] // Corrigé de styleUrl à styleUrls
 })
 export class ActivityComponent {
+
+  statutOptions: string[] = ['En_Attente', 'En_Cours', 'Termine'];
 
   activiteList!: Activity[];
   selectedActivite!: Activity;

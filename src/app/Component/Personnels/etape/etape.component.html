@@ -124,11 +124,6 @@
             <button (click)="openUploadForm(element.id, element.nom)" class="text-green-500 hover:text-green-700" aria-label="Upload Participants">
               <i class="fas fa-upload"></i>
             </button>
-<!--            <button (click)="toggleListVisibility(element.id)"-->
-<!--                    class="text-yellow-500 hover:text-yellow-600"-->
-<!--                    aria-label="Show List">-->
-<!--              <i class="fas fa-file"></i>-->
-<!--            </button>-->
             <button *ngIf="element.listeDebut?.length"
                     [routerLink]="['/liste-debut', element.id]"
                     class="text-yellow-500 hover:text-yellow-600"
@@ -143,21 +138,6 @@
             </button>
 
           </td>
-
-<!--          <td *ngIf="element.id !== undefined && (element.listeDebut?.length || element.listeResultat?.length)" colspan="3" class="bg-gray-100 px-6 py-4">-->
-<!--            <div *ngIf="element.listeDebut?.length">-->
-<!--              <h4 class="font-semibold text-gray-700">Liste Début :</h4>-->
-<!--              <ul class="list-disc ml-5">-->
-<!--                <li *ngFor="let item of element.listeDebut">{{ item.email }}</li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--            <div *ngIf="element.listeResultat?.length">-->
-<!--              <h4 class="font-semibold text-gray-700 mt-2">Liste Résultat :</h4>-->
-<!--              <ul class="list-disc ml-5">-->
-<!--                <li *ngFor="let item of element.listeResultat">{{ item }}</li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </td>-->
 
         </tr>
 

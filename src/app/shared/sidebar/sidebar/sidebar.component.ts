@@ -21,7 +21,8 @@ import { LoginServiceService } from '../../../core';
 })
 export class SidebarComponent {
   navItems = [
-    { key: 'dashboard', type: 'link', name: 'Dashboard', icon: 'home', link: '/main', roles: ['PERSONNEL', 'SUPERADMIN'] },
+    { key: 'dashboard', type: 'link', name: 'Dashboard', icon: 'home', link: '/main', roles: [ 'SUPERADMIN'] },
+    { key: 'activiteTotal', type: 'link', name: 'Activite', icon: 'tasks', link: '/activiteTotal', roles: ['PERSONNEL']},
     { key: 'entite-odc', type: 'link', name: 'Entités ODC', icon: 'building', link: '/entite-odc', roles: ['SUPERADMIN'] },
     { key: 'employer', type: 'link', name: 'Employés', icon: 'user-tie', link: '/employer', roles: ['SUPERADMIN'] },
     { key: 'role', type: 'link', name: 'Rôles', icon: 'user-shield', link: '/role', roles: ['SUPERADMIN'] },

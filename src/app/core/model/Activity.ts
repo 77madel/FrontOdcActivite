@@ -11,6 +11,7 @@ export class Activity{
   objectifParticipation?: number;
   dateDebut?: Date;
   dateFin?: Date;
+  statut?: string;
   etape?: Etape[];
   entite?: Entite;
   typeActivite?: TypeActivite;
