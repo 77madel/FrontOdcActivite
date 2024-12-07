@@ -114,6 +114,11 @@ export const routes: Routes = [
     loadComponent: () => import('./Component/Personnels/activity/activite-total/activite-total.component').then(c => c.ActiviteTotalComponent),
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./Component/profile/profile.component').then(c => c.ProfileComponent),
+    canActivate: [AuthGuardService]
+  },
   // Routes d'erreur
   {
     path: 'access-denied',

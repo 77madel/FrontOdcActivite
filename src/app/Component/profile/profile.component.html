@@ -1,0 +1,153 @@
+<div class="flex flex-col w-full max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6">
+    <!-- Navigation des Onglets -->
+    <div class="flex justify-between border-b mb-6">
+      <nav class="flex space-x-4">
+        <a
+          class="tab-link"
+          [ngClass]="{ 'text-blue-600 border-blue-600': activeTab === 'profile', 'text-gray-500': activeTab !== 'profile' }"
+          (click)="selectTab('profile')"
+        >
+          Modifier le profil
+        </a>
+        <a
+          class="tab-link"
+          [ngClass]="{ 'text-blue-600 border-blue-600': activeTab === 'preferences', 'text-gray-500': activeTab !== 'preferences' }"
+          (click)="selectTab('preferences')"
+        >
+          Préférences
+        </a>
+        <a
+          class="tab-link"
+          [ngClass]="{ 'text-blue-600 border-blue-600': activeTab === 'security', 'text-gray-500': activeTab !== 'security' }"
+          (click)="selectTab('security')"
+        >
+          Sécurité
+        </a>
+      </nav>
+    </div>
+  
+    <!-- Contenu des Onglets -->
+    <div *ngIf="activeTab === 'profile'" class="tab-content">
+      <h2 class="text-lg font-semibold mb-4">Modifier le profil</h2>
+      <!-- Tab Content -->
+        <div id="profile" class="tab-content">
+            <!-- Profile Form -->
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Section -->
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="relative">
+                    <img
+                        src="https://via.placeholder.com/100"
+                        alt="Profile Picture"
+                        class="rounded-full w-24 h-24 object-cover"
+                    />
+                    <label
+                        for="file-upload"
+                        class="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full cursor-pointer"
+                    >
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-5 h-5"
+                        >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M16.862 2.487c.864.219 1.44 1.046 1.333 1.914..."
+                        />
+                        </svg>
+                    </label>
+                    <input id="file-upload" type="file" class="hidden" />
+                    </div>
+
+                    <div class="mt-4 w-full">
+                        <label class="text-gray-600 text-sm mb-1 block">Nom</label>
+                        <input
+                            type="text"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Charlene Reed"
+                        />
+                    </div>
+                    <div class="mt-4 w-full">
+                        <label class="text-gray-600 text-sm mb-1 block">Prenom</label>
+                        <input
+                            type="text"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Votre Prenom"
+                        />
+                    </div>
+                    <div class="mt-4 w-full">
+                        <label class="text-gray-600 text-sm mb-1 block">Email</label>
+                        <input
+                            type="text"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Votre email"
+                        />
+                    </div>
+                    <div class="mt-4 w-full">
+                        <label class="text-gray-600 text-sm mb-1 block">Phone</label>
+                        <input
+                            type="text"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Votre phone"
+                        />
+                    </div>
+                </div>
+                <!-- Right Section -->
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="text-gray-600 text-sm mb-1 block">Phone</label>
+                        <input
+                            type="text"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Votre Phone"
+                        />
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm mb-1 block">Email</label>
+                        <input
+                            type="email"
+                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="charlenereed@gmail.com"
+                        />
+                    </div>
+                </div>
+               <div>
+                <button
+                    class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    Sauvegarder
+                </button>
+               </div>
+            </form>
+        </div>
+    </div>
+  
+    <div *ngIf="activeTab === 'preferences'" class="tab-content">
+      <h2 class="text-lg font-semibold mb-4">Préférences</h2>
+      <p>Contenu des préférences ici...</p>
+    </div>
+  
+    <div *ngIf="activeTab === 'security'" class="tab-content">
+      <h2 class="text-lg font-semibold mb-4">Sécurité</h2>
+      <div>
+        <label class="text-gray-600 text-sm mb-1 block">Mot de passe</label>
+        <input
+            type="password"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            placeholder="********"
+        />
+    </div>
+    </div>
+  
+    <!-- Bouton de Soumission -->
+    <!-- <div class="mt-6">
+      <button
+        class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+      >
+        Sauvegarder
+      </button>
+    </div> -->
+  </div>

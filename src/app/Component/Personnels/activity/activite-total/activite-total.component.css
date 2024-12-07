@@ -1,0 +1,10 @@
+/* app.component.css */
+::ng-deep .fc {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  
+  ::ng-deep .fc-daygrid-day {
+    cursor: pointer;
+  }
+  

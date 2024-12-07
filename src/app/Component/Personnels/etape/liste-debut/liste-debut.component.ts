@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {EtapeService} from '../../../../core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../../../../core/interface/Person';
+import { exportToExcel } from '../../../utils/export-utils';
 
 @Component({
   selector: 'app-liste-debut',
@@ -14,6 +15,7 @@ import { Person } from '../../../../core/interface/Person';
   styleUrl: './liste-debut.component.css'
 })
 export class ListeDebutComponent implements OnInit {
+  [x: string]: any;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -44,5 +46,21 @@ export class ListeDebutComponent implements OnInit {
     private route: ActivatedRoute,
     private etapeService: EtapeService
   ) {}
+
+
+  exportExcel(): void {
+    exportToExcel(this.listeDebut.map(item => ({
+      Nom: item.nom,
+      Prenom: item.prenom,
+      Email: item.email,
+      Genre: item.genre,
+      Téléphone: item.phone,
+      Activité: item.activite.nom,
+    })), 'Liste_Debut');
+  }
+
+  // exportPDF(): void {
+  //   exportToPDF(this.listeDebut, ['Nom', 'Prénom', 'Email', 'Genre', 'Téléphone', 'Activité'], 'Liste_Resultats');
+  // }
 
 }
