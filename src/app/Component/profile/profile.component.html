@@ -25,7 +25,7 @@
         </a>
       </nav>
     </div>
-  
+
     <!-- Contenu des Onglets -->
     <div *ngIf="activeTab === 'profile'" class="tab-content">
       <h2 class="text-lg font-semibold mb-4">Modifier le profil</h2>
@@ -60,44 +60,39 @@
                         />
                         </svg>
                     </label>
-                    <input id="file-upload" type="file" class="hidden" />
-                    </div>
-
-                    <div class="mt-4 w-full">
-                        <label class="text-gray-600 text-sm mb-1 block">Nom</label>
-                        <input
-                            type="text"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Charlene Reed"
-                        />
-                    </div>
-                    <div class="mt-4 w-full">
-                        <label class="text-gray-600 text-sm mb-1 block">Prenom</label>
-                        <input
-                            type="text"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Votre Prenom"
-                        />
-                    </div>
-                    <div class="mt-4 w-full">
-                        <label class="text-gray-600 text-sm mb-1 block">Email</label>
-                        <input
-                            type="text"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Votre email"
-                        />
-                    </div>
-                    <div class="mt-4 w-full">
-                        <label class="text-gray-600 text-sm mb-1 block">Phone</label>
-                        <input
-                            type="text"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Votre phone"
-                        />
+                    <input id="file-upload" type="file" class="hidden"
+                           (change)="onFileChange($event)"
+                    />
                     </div>
                 </div>
                 <!-- Right Section -->
                 <div class="grid grid-cols-1 gap-4">
+                  <div class="mt-4 w-full">
+                    <label class="text-gray-600 text-sm mb-1 block">Nom</label>
+                    <input
+                      type="text"
+                      [(ngModel)]="user.nom"
+                      name="nom"
+                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Charlene Reed"
+                    />
+                  </div>
+                  <div class="mt-4 w-full">
+                    <label class="text-gray-600 text-sm mb-1 block">Prenom</label>
+                    <input
+                      type="text"
+                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Votre Prenom"
+                    />
+                  </div>
+                  <div class="mt-4 w-full">
+                    <label class="text-gray-600 text-sm mb-1 block">Email</label>
+                    <input
+                      type="text"
+                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Votre email"
+                    />
+                  </div>
                     <div>
                         <label class="text-gray-600 text-sm mb-1 block">Phone</label>
                         <input
@@ -124,12 +119,12 @@
             </form>
         </div>
     </div>
-  
+
     <div *ngIf="activeTab === 'preferences'" class="tab-content">
       <h2 class="text-lg font-semibold mb-4">Préférences</h2>
       <p>Contenu des préférences ici...</p>
     </div>
-  
+
     <div *ngIf="activeTab === 'security'" class="tab-content">
       <h2 class="text-lg font-semibold mb-4">Sécurité</h2>
       <div>
@@ -141,7 +136,7 @@
         />
     </div>
     </div>
-  
+
     <!-- Bouton de Soumission -->
     <!-- <div class="mt-6">
       <button

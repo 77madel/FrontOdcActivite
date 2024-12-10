@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Etape, EtapeService, Critere, CritereService, Activity, GlobalCrudService } from '../../../core';
@@ -14,6 +14,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule, MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import Swal from 'sweetalert2';
+import * as CryptoJS from 'crypto-js';
 
 interface EtapeDTO {
   id: number;
@@ -65,6 +66,7 @@ export class EtapeComponent implements OnInit {
   criteres: Critere[] = [];
   dateDebut?: Date;
   dateFin?: Date;
+  selectedCriteres: number[] = [];
 
   visibleLists: { [key: number]: boolean } = {};
 
@@ -82,14 +84,15 @@ export class EtapeComponent implements OnInit {
     private etapeService: EtapeService,
     private globalService: GlobalCrudService,
     private snackBar: MatSnackBar,
-    private critereService: CritereService
+    private critereService: CritereService,
+    private router: Router
   ) {
     this.addElementForm = this.fb.group({
       nom: ['', Validators.required],
       // statut: ['', Validators.required],
       dateDebut: ['', Validators.required],
       dateFin: ['', Validators.required],
-      critere: ['', Validators.required],
+      critere: this.fb.array([], Validators.required), // Tableau pour les critères
     });
   }
 
@@ -123,25 +126,28 @@ export class EtapeComponent implements OnInit {
     this.fetchCriteres();
   }
 
-  openUploadForm(etapeId: number | undefined, etapeNom: string | undefined) {
-    if (etapeId !== undefined && etapeNom !== undefined) {
-      this.currentEtapeId = etapeId;
-      this.currentEtapeNom = etapeNom;
-      this.isUploadFormVisible = true;
-      this.isFormVisible = false;
-      this.isTableVisible = false;
+  onCheckboxChange(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    const critereArray = this.addElementForm.get('critere') as FormArray;
+
+    if (checkbox.checked) {
+      critereArray.push(this.fb.control(checkbox.value));
     } else {
-      console.error('L\'ID ou le nom de l\'étape ne peut pas être indéfini.');
+      const index = critereArray.controls.findIndex(control => control.value === checkbox.value);
+      critereArray.removeAt(index);
     }
   }
 
+
   toggleForm() {
-    this.isFormVisible = !this.isFormVisible; // Alterne la visibilité du formulaire
-    this.isUploadFormVisible = false; // Assurez-vous que le formulaire d'upload est caché
-  }
-  showUploadForm() {
-    this.isUploadFormVisible = true; // Afficher le formulaire d'upload
-    this.isFormVisible = false; // Masquer le formulaire d'ajout/modification
+    this.isFormVisible = !this.isFormVisible;
+    this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
+    if (!this.isFormVisible) {
+      this.isEditMode = false;
+      this.resetForm() // Si vous utilisez un objet `formData`, réinitialisez-le également
+    }
   }
 
 
@@ -365,99 +371,40 @@ export class EtapeComponent implements OnInit {
     }
   }
 
-  onFileChange(event: any) {
-    this.selectedFile = event.target.files[0];
-    if (this.selectedFile) {
-      console.log(`Fichier sélectionné : ${this.selectedFile.name}`);
-    }
-  }
 
+  // openUploadForm(etapeId: number | undefined, etapeNom: string | undefined) {
+  //   if (etapeId && etapeNom) {
+  //     this.router.navigate([`/import/${etapeId}/${etapeNom}`]);
+  //   } else {
+  //     console.error('ID ou nom de l\'étape manquant.');
+  //   }
+  // }
 
-  uploadParticipants(id: number, toListeDebut: boolean) {
-    if (id === 0) {
-      //console.error('Erreur : ID de l\'étape est 0, impossible de continuer');
-      Swal.fire({
-        icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
-        text: 'ID de l\'étape invalide',
-        confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
-      });
-      return;
-    }
+  openUploadForm(etapeId: number | undefined, etapeNom: string | undefined) {
+    if (etapeId !== undefined && etapeNom !== undefined) {
+      this.currentEtapeId = etapeId;
+      this.currentEtapeNom = etapeNom;
+      // this.isUploadFormVisible = true;
+      // this.isFormVisible = false;
+      // this.isTableVisible = false;
 
-    // Vérifiez si un upload est déjà en cours
-    if (this.uploading) {
-      Swal.fire({
-        icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
-        text: 'Un upload est déjà en cours, veuillez attendre.',
-        confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
-      });
-      return;
-    }
+      // Chiffrement des données avant de les envoyer dans les queryParams
+      const encryptedEtapeId = CryptoJS.AES.encrypt(etapeId.toString(), 'secretKey').toString();
+      const encryptedEtapeNom = CryptoJS.AES.encrypt(etapeNom, 'secretKey').toString();
 
-    if (this.selectedFile) {
-      this.uploading = true; // Début de l'upload
+      // Envoi des paramètres dans l'URL sous forme de queryParams
+      this.router.navigate(['/import'], { queryParams: { etapeId: encryptedEtapeId, etapeNom: encryptedEtapeNom } });
 
-      this.etapeService.uploadParticipants(id, this.selectedFile, toListeDebut).subscribe({
-        next: () => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "success",
-            title: "Participants ajoutés avec succès"
-          });
-          this.fetchElements(); // Met à jour la liste des étapes
-
-          // Réinitialiser le fichier sélectionné
-          this.selectedFile = null;
-
-          // Masquer le formulaire d'upload et afficher la table
-          this.isUploadFormVisible = false;
-          this.isTableVisible = true; // Assurez-vous que cette variable est définie correctement
-
-          this.uploading = false; // Fin de l'upload
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
-            confirmButtonText: 'Ok',
-            customClass: {
-              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-            },
-          });
-          this.uploading = false; // Fin de l'upload même en cas d'erreur
-        }
-      });
+      console.log("Etape id actuel", this.currentEtapeId);
     } else {
-      Swal.fire({
-        icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
-        text: 'Veuillez sélectionner un fichier avant de continuer.',
-        confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
-      });
+      console.error('L\'ID ou le nom de l\'étape ne peut pas être indéfini.');
     }
   }
+
+
+
+
+
 
   showError(message: string) {
     this.errorMessage = message;

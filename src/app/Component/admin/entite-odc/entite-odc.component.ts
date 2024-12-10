@@ -45,8 +45,12 @@ export class EntiteODCComponent implements OnInit {
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
     this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
-  }
 
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
+    if (!this.isFormVisible) {
+      this.isEditMode = false;
+    }
+  }
 
   searchTerm: string = '';
 
@@ -96,6 +100,7 @@ export class EntiteODCComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router) {
     this.entiteToAdd = new Entite();
+
   }
 
   viewEntiteDetails(entite: any): void {
@@ -130,9 +135,8 @@ export class EntiteODCComponent implements OnInit {
   getAllUtilisateur() {
     this.globalService.get("utilisateur").subscribe({
       next: (value) => {
-        console.log("Réponse brute de l'API :", value);
         this.utilisateur = value;
-
+        console.log("Réponse brute de l'API :",  this.utilisateur );
         // Vérifiez que la réponse est un tableau
         if (Array.isArray(value)) {
           // Filtrer les utilisateurs ayant le rôle "Personnel"

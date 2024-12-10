@@ -60,9 +60,21 @@ export class RoleComponent implements OnInit {
   }
 
   // Fonction pour basculer l'affichage du formulaire et de la table
+  // toggleForm() {
+  //   this.isFormVisible = !this.isFormVisible;
+  //   this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+  // }
+
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
     this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
+    if (!this.isFormVisible) {
+      this.isEditMode = false;
+      this.addElementForm.reset(); // Réinitialise tous les champs du formulaire
+      this.formData = {}; // Si vous utilisez un objet `formData`, réinitialisez-le également
+    }
   }
 
   async handleSubmit() {

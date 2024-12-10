@@ -2,7 +2,7 @@ import { afterNextRender, Component, inject, OnInit, PLATFORM_ID, signal } from 
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import {isPlatformBrowser, NgIf} from '@angular/common';
 import { filter } from 'rxjs';
-import { LoginServiceService } from './core';
+import {InactivityService, LoginServiceService} from './core';
 import { HeaderComponent } from './shared/header/header/header.component';
 import { SidebarComponent } from './shared/sidebar/sidebar/sidebar.component';
 
@@ -28,7 +28,8 @@ export class AppComponent implements OnInit {
   isLoggedIn = signal(false); // Ajoutez ce signal pour suivre l'état de connexion
 
   constructor(
-    private loginService: LoginServiceService // Injectez votre service d'authentification
+    private loginService: LoginServiceService,// Injectez votre service d'authentification
+    private inactivityService: InactivityService
   ) {
     afterNextRender(() => {
       // Scroll à la page du haut si l'URL change

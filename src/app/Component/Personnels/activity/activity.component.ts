@@ -147,7 +147,13 @@ export class ActivityComponent {
 
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
-    this.isTableVisible = !this.isTableVisible;
+    this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
+    if (!this.isFormVisible) {
+      this.isEditMode = false;
+      this.resetForm() // Si vous utilisez un objet `formData`, réinitialisez-le également
+    }
   }
 
   modifierActivite(activite: Activity) {

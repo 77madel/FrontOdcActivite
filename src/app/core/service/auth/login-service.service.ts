@@ -79,6 +79,17 @@ export class LoginServiceService {
     return throwError(errorMessage);
   }
 
+  // Vérifier si le token est expiré
+  isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Décodage du payload
+      const expirationDate = payload.exp * 1000; // Conversion en millisecondes
+      return Date.now() > expirationDate;
+    } catch (error) {
+      return true; // Si le token est mal formé ou invalide
+    }
+  }
+
   /**
    * Déconnecte l'utilisateur
    */

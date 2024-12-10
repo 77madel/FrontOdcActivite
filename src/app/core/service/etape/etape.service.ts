@@ -8,14 +8,25 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class EtapeService {
-  private currentEtapeId: number | null = null;
+  private etapeId: number | undefined;
+  private etapeNom: string | undefined;
 
-  setCurrentEtapeId(id: number) {
-    this.currentEtapeId = id;
+  setEtapeData(id: number, nom: string): void {
+    this.etapeId = id;
+    this.etapeNom = nom;
   }
 
-  getCurrentEtapeId(): number | null {
-    return this.currentEtapeId;
+  getEtapeId(): number | undefined {
+    return this.etapeId;
+  }
+
+  getEtapeNom(): string | undefined {
+    return this.etapeNom;
+  }
+
+  clearData(): void {
+    this.etapeId = undefined;
+    this.etapeNom = undefined;
   }
 
   private BASE_URL = "http://localhost:8080";

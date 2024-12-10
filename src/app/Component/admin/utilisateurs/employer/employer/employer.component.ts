@@ -47,10 +47,13 @@ export class EmployerComponent implements OnInit {
     this.getEntite();
   }
 
-  toggleForm(): void {
+  toggleForm() {
     this.isFormVisible = !this.isFormVisible;
-    this.isTableVisible = !this.isTableVisible;
+    this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
     if (!this.isFormVisible) {
+      this.isEditMode = false;
       this.resetForm();
     }
   }

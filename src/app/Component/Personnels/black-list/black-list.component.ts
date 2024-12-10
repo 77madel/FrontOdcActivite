@@ -29,6 +29,12 @@ export class BlackListComponent implements OnInit {
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
     this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
+
+    // Réinitialiser isEditMode à false lorsque le formulaire est fermé
+    if (!this.isFormVisible) {
+      this.isEditMode = false;
+      this.resetForm();
+    }
   }
 
 
