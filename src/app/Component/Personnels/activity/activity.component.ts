@@ -8,7 +8,16 @@ import { MatInput } from "@angular/material/input";
 import { MatOption } from "@angular/material/autocomplete";
 import { MatSelect } from "@angular/material/select";
 import { CommonModule, NgForOf, NgIf } from "@angular/common";
-import { Etape, TypeActivite, EtapeService, Activity, Entite, GlobalCrudService, EntiteOdcService } from '../../../core';
+import {
+  Etape,
+  TypeActivite,
+  EtapeService,
+  Activity,
+  Entite,
+  GlobalCrudService,
+  EntiteOdcService,
+  LoginServiceService
+} from '../../../core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import {MatCheckbox} from "@angular/material/checkbox";
 import Swal from 'sweetalert2';
@@ -28,7 +37,6 @@ import Swal from 'sweetalert2';
 })
 export class ActivityComponent {
 
-  statutOptions: string[] = ['En_Attente', 'En_Cours', 'Termine'];
 
   activiteList!: Activity[];
   selectedActivite!: Activity;
@@ -36,6 +44,7 @@ export class ActivityComponent {
   etape: Etape[] | undefined;
   entite: Entite[] | undefined;
   typeActivite: TypeActivite[] | undefined;
+  userRoles: string[] = [];
 
   isFormVisible: boolean = false;
   isTableVisible: boolean = true;
@@ -88,8 +97,10 @@ export class ActivityComponent {
     private globalService: GlobalCrudService,
     private etapeService: EtapeService,
     private entiteService: EntiteOdcService,
+    private loginService: LoginServiceService,
     private snackBar: MatSnackBar
   ) {
+    this.userRoles = this.loginService.getUserRoles();
     this.activiteToAdd = new Activity();
   }
 
@@ -234,6 +245,8 @@ export class ActivityComponent {
       title: "Modification opérée avec éclat."
     });
   }
+
+  // Vérifie si l'utilisateur a accès à l'élément
 
   ajouterActivity() {
     if (!this.activiteToAdd.entite) {

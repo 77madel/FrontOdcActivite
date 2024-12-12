@@ -1,6 +1,6 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 
 
 @Injectable({
@@ -64,5 +64,17 @@ export class GlobalCrudService {
    */
   delete(name: string,id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${name}/${id}`);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur est survenue';
+    if (error.error instanceof ErrorEvent) {
+      // Erreur côté client
+      errorMessage = `Erreur: ${error.error.message}`;
+    } else {
+      // Erreur côté serveur
+      errorMessage = `Erreur ${error.status}: ${error.error}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TypeActivite, GlobalCrudService} from "../../../core";
+import {TypeActivite, GlobalCrudService, LoginServiceService} from "../../../core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
@@ -25,6 +25,7 @@ export class TypeActiciteComponent implements OnInit {
   isFormVisible: boolean = false;
   isTableVisible: boolean = true;
   isEditMode = false;
+  userRoles: string[] = [];
 
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
@@ -85,7 +86,10 @@ export class TypeActiciteComponent implements OnInit {
 
   constructor(
     private globalService: GlobalCrudService,
-    private snackBar: MatSnackBar,) {
+    private snackBar: MatSnackBar,
+    private loginService: LoginServiceService
+  ) {
+    this.userRoles = this.loginService.getUserRoles();
     this.typeActiviteToAdd = new TypeActivite();
   }
 

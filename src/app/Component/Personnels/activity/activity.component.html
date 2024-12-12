@@ -8,6 +8,7 @@
     </div>
     <div class="mt-3 flex-grow flex justify-end">
       <button
+        *ngIf="userRoles.includes('PERSONNEL')"
         (click)="toggleForm()"
         class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition duration-150 ease-in-out"
       >
@@ -94,17 +95,19 @@
         </div>
 
         <!-- Boucle pour afficher les étapes avec cases à cocher -->
-        <div *ngFor="let option of etape" class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
-          <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"
-                 (change)="updateSelectedEtapes()"
-                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
+        <div *ngIf="isEditMode">
+          <div *ngFor="let option of etape" class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>
+            <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"
+                   (change)="updateSelectedEtapes()"
+                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />
+          </div>
         </div>
       </div>
 
       <!-- Bouton de soumission -->
       <div class="flex justify-end">
-        <button type="submit" class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition">
+        <button  type="submit" class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition">
           {{ isEditMode ? 'Modifier' : 'Ajouter' }}
         </button>
       </div>
@@ -146,7 +149,7 @@
               {{ element.statut }}
             </span>
         </td>
-        <td class="p-3 flex gap-2">
+        <td *ngIf="userRoles.includes('PERSONNEL')" class="p-3 flex gap-2">
           <button  class="text-bg-dark hover:text-orange-500">
             <i class="fas fa-eye"></i>
           </button>
@@ -168,18 +171,19 @@
       </tr>
       </tbody>
     </table>
-  </div>
 
-  <!-- Pagination -->
-  <div class="flex justify-center mt-6 space-x-2">
-    <button (click)="prevPage()" [disabled]="currentPage === 1"
-            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
-      <i class="fas fa-chevron-right"></i>
-    </button>
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6 space-x-2">
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
   </div>
 </div>

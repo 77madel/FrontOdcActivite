@@ -2,7 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Etape, EtapeService, Critere, CritereService, Activity, GlobalCrudService } from '../../../core';
+import {
+  Etape,
+  EtapeService,
+  Critere,
+  CritereService,
+  Activity,
+  GlobalCrudService,
+  LoginServiceService
+} from '../../../core';
 import { CommonModule } from "@angular/common";
 import { MatTableModule } from "@angular/material/table";
 import { MatButtonModule } from "@angular/material/button";
@@ -67,6 +75,7 @@ export class EtapeComponent implements OnInit {
   dateDebut?: Date;
   dateFin?: Date;
   selectedCriteres: number[] = [];
+  userRoles: string[] = [];
 
   visibleLists: { [key: number]: boolean } = {};
 
@@ -85,7 +94,9 @@ export class EtapeComponent implements OnInit {
     private globalService: GlobalCrudService,
     private snackBar: MatSnackBar,
     private critereService: CritereService,
-    private router: Router
+    private router: Router,
+    private loginService: LoginServiceService
+
   ) {
     this.addElementForm = this.fb.group({
       nom: ['', Validators.required],
@@ -94,6 +105,7 @@ export class EtapeComponent implements OnInit {
       dateFin: ['', Validators.required],
       critere: this.fb.array([], Validators.required), // Tableau pour les critères
     });
+    this.userRoles = this.loginService.getUserRoles();
   }
 
   get paginatedEtapes() {

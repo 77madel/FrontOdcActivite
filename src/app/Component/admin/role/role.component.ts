@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatInput } from "@angular/material/input";
 import { MatCardModule } from '@angular/material/card';
 import { Router } from "@angular/router";
 import { Role, RoleServiceService } from '../../../core';
@@ -22,7 +21,6 @@ import Swal from 'sweetalert2';
     MatIconModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInput,
     MatCardModule,
   ],
   templateUrl: './role.component.html',
@@ -36,9 +34,8 @@ export class RoleComponent implements OnInit {
     nom: ''
   };
   role:Role[]=[];
+  errorMessage: string | undefined;
 
-
-  errorMessage: string = '';
 
   isFormVisible: boolean = false;
   isTableVisible: boolean = true; // Contrôle la visibilité de la table
@@ -58,12 +55,6 @@ export class RoleComponent implements OnInit {
       nom: ['', Validators.required],
     });
   }
-
-  // Fonction pour basculer l'affichage du formulaire et de la table
-  // toggleForm() {
-  //   this.isFormVisible = !this.isFormVisible;
-  //   this.isTableVisible = !this.isTableVisible; // Basculer la visibilité de la table
-  // }
 
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
@@ -165,7 +156,21 @@ export class RoleComponent implements OnInit {
       this.isTableVisible = true; // Afficher le tableau
 
     } catch (error: any) {
-      this.showError(error.message);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: this.errorMessage
+      });
     }
   }
 
@@ -191,11 +196,6 @@ export class RoleComponent implements OnInit {
 
 
   async onDeleteRole(roleId: number | undefined): Promise<void> {
-    const confirmDeletion = confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');
-    if (!confirmDeletion) {
-      return;
-    }
-
     try {
       const response = await this.roleServive.deleteRole(roleId);
         this.role = response;

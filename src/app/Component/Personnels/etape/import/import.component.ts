@@ -21,7 +21,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class ImportComponent implements OnInit{
 
-  selectedFile: File | null = null;
+  selectedFile: File[] = [];
   uploadForm: FormGroup | undefined;
   addElementForm: FormGroup;
   errorMessage: string = '';
@@ -70,100 +70,158 @@ export class ImportComponent implements OnInit{
   }
 
 
-  onFileChange(event: any) {
-    this.selectedFile = event.target.files[0];
-    if (this.selectedFile) {
-      console.log(`Fichier sélectionné : ${this.selectedFile.name}`);
+  // onFileChange(event: any) {
+  //   this.selectedFile = event.target.files[0];
+  //   if (this.selectedFile) {
+  //     console.log(`Fichier sélectionné : ${this.selectedFile.name}`);
+  //   }
+  // }
+
+  // Méthode pour gérer le changement des fichiers
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.selectedFile = Array.from(input.files); // Convertir FileList en tableau
     }
   }
 
 
-  uploadParticipants(id: number | undefined, toListeDebut: boolean) {
+  // uploadParticipants(id: number | undefined, toListeDebut: boolean) {
+  //   if (!id) {
+  //     //console.error('Erreur : ID de l\'étape est 0, impossible de continuer');
+  //     Swal.fire({
+  //       icon: 'info',
+  //       title: '<span class="text-orange-500">Info</span>',
+  //       text: 'ID de l\'étape invalide',
+  //       confirmButtonText: 'Ok',
+  //       customClass: {
+  //         confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+  //       },
+  //     });
+  //     return;
+  //   }
+  //
+  //   // Vérifiez si un upload est déjà en cours
+  //   if (this.uploading) {
+  //     Swal.fire({
+  //       icon: 'info',
+  //       title: '<span class="text-orange-500">Info</span>',
+  //       text: 'Un upload est déjà en cours, veuillez attendre.',
+  //       confirmButtonText: 'Ok',
+  //       customClass: {
+  //         confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+  //       },
+  //     });
+  //     return;
+  //   }
+  //
+  //   if (this.selectedFile) {
+  //     this.uploading = true; // Début de l'upload
+  //
+  //     this.etapeService.uploadParticipants(id, this.selectedFile, toListeDebut).subscribe({
+  //       next: () => {
+  //         const Toast = Swal.mixin({
+  //           toast: true,
+  //           position: "top-end",
+  //           showConfirmButton: false,
+  //           timer: 3000,
+  //           timerProgressBar: true,
+  //           didOpen: (toast) => {
+  //             toast.onmouseenter = Swal.stopTimer;
+  //             toast.onmouseleave = Swal.resumeTimer;
+  //           }
+  //         });
+  //         Toast.fire({
+  //           icon: "success",
+  //           title: "Participants ajoutés avec succès"
+  //         });
+  //         this.router.navigate(['/etape']);
+  //         this.fetchElements(); // Met à jour la liste des étapes
+  //
+  //         // Réinitialiser le fichier sélectionné
+  //         this.selectedFile = null;
+  //
+  //         // Masquer le formulaire d'upload et afficher la table
+  //         this.isUploadFormVisible = false;
+  //         this.isTableVisible = true; // Assurez-vous que cette variable est définie correctement
+  //
+  //         this.uploading = false; // Fin de l'upload
+  //       },
+  //       error: (err) => {
+  //         Swal.fire({
+  //           icon: 'error',
+  //           title: '<span class="text-red-500">Échec</span>',
+  //           text: this.errorMessage,
+  //           confirmButtonText: 'Ok',
+  //           customClass: {
+  //             confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+  //           },
+  //         });
+  //         this.uploading = false; // Fin de l'upload même en cas d'erreur
+  //       }
+  //     });
+  //   } else {
+  //     Swal.fire({
+  //       icon: 'info',
+  //       title: '<span class="text-orange-500">Info</span>',
+  //       text: 'Veuillez sélectionner un fichier avant de continuer.',
+  //       confirmButtonText: 'Ok',
+  //       customClass: {
+  //         confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+  //       },
+  //     });
+  //   }
+  // }
+
+  // Méthode pour uploader les participants
+  uploadParticipants(id: number, toListeDebut: boolean): void {
     if (!id) {
-      //console.error('Erreur : ID de l\'étape est 0, impossible de continuer');
       Swal.fire({
         icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
+        title: 'Info',
         text: 'ID de l\'étape invalide',
         confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
+        customClass: { confirmButton: 'bg-red-500 text-white hover:bg-red-600' }
       });
       return;
     }
 
-    // Vérifiez si un upload est déjà en cours
-    if (this.uploading) {
-      Swal.fire({
-        icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
-        text: 'Un upload est déjà en cours, veuillez attendre.',
-        confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
-      });
-      return;
-    }
+    if (this.selectedFile.length > 0) {
+      this.uploading = true;
+      const uploadPromises = this.selectedFile.map((file) =>
+        this.etapeService.uploadParticipants(id, file, toListeDebut).toPromise()
+      );
 
-    if (this.selectedFile) {
-      this.uploading = true; // Début de l'upload
-
-      this.etapeService.uploadParticipants(id, this.selectedFile, toListeDebut).subscribe({
-        next: () => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "success",
-            title: "Participants ajoutés avec succès"
+      Promise.all(uploadPromises)
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: 'Tous les fichiers ont été uploadés avec succès.'
           });
           this.router.navigate(['/etape']);
-          this.fetchElements(); // Met à jour la liste des étapes
-
-          // Réinitialiser le fichier sélectionné
-          this.selectedFile = null;
-
-          // Masquer le formulaire d'upload et afficher la table
-          this.isUploadFormVisible = false;
-          this.isTableVisible = true; // Assurez-vous que cette variable est définie correctement
-
-          this.uploading = false; // Fin de l'upload
-        },
-        error: (err) => {
+          this.selectedFile = [];
+          this.uploading = false;
+        })
+        .catch((err) => {
           Swal.fire({
             icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
-            confirmButtonText: 'Ok',
-            customClass: {
-              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-            },
+            title: 'Échec',
+            text: 'Une erreur est survenue lors de l\'upload des fichiers.'
           });
-          this.uploading = false; // Fin de l'upload même en cas d'erreur
-        }
-      });
+          this.uploading = false;
+        });
     } else {
       Swal.fire({
         icon: 'info',
-        title: '<span class="text-orange-500">Info</span>',
-        text: 'Veuillez sélectionner un fichier avant de continuer.',
+        title: 'Info',
+        text: 'Veuillez sélectionner au moins un fichier avant de continuer.',
         confirmButtonText: 'Ok',
-        customClass: {
-          confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-        },
+        customClass: { confirmButton: 'bg-red-500 text-white hover:bg-red-600' }
       });
     }
   }
+
 
   showError(message: string) {
     this.errorMessage = message;

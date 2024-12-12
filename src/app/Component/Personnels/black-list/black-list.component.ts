@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
-import {Utilisateur, BlackList, GlobalCrudService} from "../../../core";
+import {Utilisateur, BlackList, GlobalCrudService, LoginServiceService} from "../../../core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import Swal from 'sweetalert2';
 
@@ -25,6 +25,7 @@ export class BlackListComponent implements OnInit {
   isFormVisible: boolean = false;
   isTableVisible: boolean = true;
   isEditMode = false;
+  userRoles: string[] = [];
 
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
@@ -84,7 +85,11 @@ export class BlackListComponent implements OnInit {
 
   constructor(
     private globalService: GlobalCrudService,
-    private snackBar: MatSnackBar,) {
+    private snackBar: MatSnackBar,
+    private loginService: LoginServiceService
+  )
+  {
+    this.userRoles = this.loginService.getUserRoles();
     this.blackListToAdd = new Utilisateur();
   }
 

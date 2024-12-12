@@ -26,12 +26,12 @@ export class SidebarComponent {
     { key: 'entite-odc', type: 'link', name: 'Entités ODC', icon: 'building', link: '/entite-odc', roles: ['SUPERADMIN'] },
     { key: 'employer', type: 'link', name: 'Employés', icon: 'user-tie', link: '/employer', roles: ['SUPERADMIN'] },
     { key: 'role', type: 'link', name: 'Rôles', icon: 'user-shield', link: '/role', roles: ['SUPERADMIN'] },
-    { key: 'activity', type: 'link', name: 'Activités', icon: 'tasks', link: '/activity', roles: ['PERSONNEL'] },
-    { key: 'typeActivite', type: 'link', name: 'Types d\'Activité', icon: 'th-list', link: '/typeActivite', roles: ['PERSONNEL'] },
-    { key: 'critere', type: 'link', name: 'Critères', icon: 'check-circle', link: '/critere', roles: ['PERSONNEL'] },
-    { key: 'etape', type: 'link', name: 'Étapes', icon: 'list-ol', link: '/etape', roles: ['PERSONNEL'] },
-    { key: 'participants', type: 'link', name: 'Participants', icon: 'users', link: '/participants', roles: ['PERSONNEL'] },
-    { key: 'blacklist', type: 'link', name: 'Liste noire', icon: 'ban', link: '/blacklist', roles: ['PERSONNEL'] },
+    { key: 'activity', type: 'link', name: 'Activités', icon: 'tasks', link: '/activity', roles: ['PERSONNEL','SUPERADMIN'] },
+    { key: 'typeActivite', type: 'link', name: 'Types d\'Activité', icon: 'th-list', link: '/typeActivite', roles: ['PERSONNEL','SUPERADMIN'] },
+    { key: 'critere', type: 'link', name: 'Critères', icon: 'check-circle', link: '/critere', roles: ['PERSONNEL','SUPERADMIN'] },
+    { key: 'etape', type: 'link', name: 'Étapes', icon: 'list-ol', link: '/etape', roles: ['PERSONNEL','SUPERADMIN'] },
+    { key: 'participants', type: 'link', name: 'Participants', icon: 'users', link: '/participants', roles: ['PERSONNEL','SUPERADMIN'] },
+    { key: 'blacklist', type: 'link', name: 'Liste noire', icon: 'ban', link: '/blacklist', roles: ['PERSONNEL','SUPERADMIN'] },
   ];
 
   userRoles: string[] = [];

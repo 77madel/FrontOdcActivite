@@ -11,7 +11,7 @@ import {MatInput} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule, MatOption} from "@angular/material/core";
-import {CritereService, Critere} from "../../../core";
+import {CritereService, Critere, LoginServiceService} from "../../../core";
 import Swal from 'sweetalert2';
 
 @Component({
@@ -82,19 +82,22 @@ export class CritereComponent implements OnInit {
   addElementForm: FormGroup;
   isEditMode = false;
   currentRoleId: number | null = null;
+  userRoles: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     private readonly critereService: CritereService,
     private readonly router: Router,
     private snackBar: MatSnackBar,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private loginService: LoginServiceService
   ) {
     this.addElementForm = this.fb.group({
       libelle: ['', Validators.required],
       intutile: ['', Validators.required],
       point: ['', Validators.required],
     });
+    this.userRoles = this.loginService.getUserRoles();
   }
 
   // Fonction pour basculer l'affichage du formulaire et de la table

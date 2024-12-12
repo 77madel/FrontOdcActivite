@@ -5,7 +5,7 @@ import {
   ParticipantService,
   GlobalCrudService,
   Etape,
-  EtapeService
+  EtapeService, LoginServiceService
 } from '../../../core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -36,6 +36,7 @@ export class ParticipantComponent implements OnInit {
 
   // Liste des activités
   activites: Activity[] = [];
+  userRoles: string[] = [];
 
   // Liste des étapes filtrées en fonction de l'activité sélectionnée
   filteredEtapes: Etape[] = [];
@@ -72,7 +73,8 @@ export class ParticipantComponent implements OnInit {
     private readonly globalService: GlobalCrudService,
     private snackBar: MatSnackBar,
     private http: HttpClient,
-    private etapeService: EtapeService
+    private etapeService: EtapeService,
+    private loginService: LoginServiceService
   ) {
     this.addElementForm = this.fb.group({
       nom: ['', Validators.required],
@@ -82,6 +84,7 @@ export class ParticipantComponent implements OnInit {
       genre: ['', Validators.required],
       activites: ['', Validators.required]
     });
+    this.userRoles = this.loginService.getUserRoles();
 
     // Initialisation du formulaire de filtres
     this.filtersForm = this.fb.group({

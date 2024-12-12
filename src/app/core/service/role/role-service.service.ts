@@ -1,5 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,17 @@ export class RoleServiceService {
       console.error('Erreur lors de la modification du rôle:', error);
       throw error;
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur est survenue';
+    if (error.error instanceof ErrorEvent) {
+      // Erreur côté client
+      errorMessage = `Erreur: ${error.error.message}`;
+    } else {
+      // Erreur côté serveur
+      errorMessage = `Erreur ${error.status}: ${error.error}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }
