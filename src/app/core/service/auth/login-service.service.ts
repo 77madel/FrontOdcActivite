@@ -3,6 +3,7 @@ import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UtilFunction } from '../../utils-function';
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -23,24 +24,46 @@ export class LoginServiceService {
     return this.currentUserSubject.value;
   }
 
+  getDecodedToken(token: string): any {
+    return jwtDecode(token);
+  }
+
   /**
    * Effectue la connexion de l'utilisateur
    * @param username Nom d'utilisateur
    * @param password Mot de passe
    * @returns Observable de l'utilisateur connecté
    */
+  // login(username: string, password: string): Observable<any> {
+  //   return this.http.post<any>(`${this.BASE_URL}/auth/login`, { username, password })
+  //     .pipe(
+  //       map(user => {
+  //         if (user && user.bearer && this.isBrowser()) {
+  //           localStorage.setItem('currentUser', JSON.stringify(user));
+  //           const decoded = this.decodeJwt(user.bearer);
+  //           const roles = decoded && decoded.role ? [decoded.role] : [];
+  //           localStorage.setItem('roles', JSON.stringify(roles));
+  //           this.currentUserSubject.next(user);
+  //         }
+  //         return user;
+  //       }),
+  //       catchError(this.handleError)
+  //     );
+  // }
+
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/auth/login`, { username, password })
       .pipe(
-        map(user => {
-          if (user && user.bearer && this.isBrowser()) {
+        map(response => {
+          if (response && response.bearer && this.isBrowser()) {
+            const user = response.user; // Assurez-vous d'extraire l'utilisateur
             localStorage.setItem('currentUser', JSON.stringify(user));
-            const decoded = this.decodeJwt(user.bearer);
+            const decoded = this.decodeJwt(response.bearer);
             const roles = decoded && decoded.role ? [decoded.role] : [];
             localStorage.setItem('roles', JSON.stringify(roles));
-            this.currentUserSubject.next(user);
+            this.currentUserSubject.next(user); // Mettez à jour le BehaviorSubject avec l'utilisateur
           }
-          return user;
+          return response; // Retourne la réponse originale
         }),
         catchError(this.handleError)
       );
@@ -137,6 +160,11 @@ export class LoginServiceService {
       }
     }
     return user;
+  }
+
+  getUserData(token: string): Observable<any> {
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.get(`${this.BASE_URL}/utilisateur`, { headers });
   }
 
   /**

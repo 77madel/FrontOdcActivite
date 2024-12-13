@@ -7,7 +7,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(LoginServiceService);  // Injecter le AuthService
   const router = inject(Router); // Injecter le Router
 
-  if(!req.url.includes("/login")){
+  if(!req.url.includes("/sign-in")){
     const user = authService.getUserFromLocalStorage(); // Récupérer l'utilisateur depuis localStorage
     const token = user?.bearer; // Extraire le token de l'utilisateur s'il est disponible
     // Vérifiez si le token existe

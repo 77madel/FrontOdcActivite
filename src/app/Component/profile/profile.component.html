@@ -67,48 +67,44 @@
                 </div>
                 <!-- Right Section -->
                 <div class="grid grid-cols-1 gap-4">
-                  <div class="mt-4 w-full">
-                    <label class="text-gray-600 text-sm mb-1 block">Nom</label>
-                    <input
-                      type="text"
-                      [(ngModel)]="user.nom"
-                      name="nom"
-                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Charlene Reed"
-                    />
-                  </div>
-                  <div class="mt-4 w-full">
-                    <label class="text-gray-600 text-sm mb-1 block">Prenom</label>
-                    <input
-                      type="text"
-                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Votre Prenom"
-                    />
-                  </div>
-                  <div class="mt-4 w-full">
-                    <label class="text-gray-600 text-sm mb-1 block">Email</label>
-                    <input
-                      type="text"
-                      class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Votre email"
-                    />
-                  </div>
-                    <div>
-                        <label class="text-gray-600 text-sm mb-1 block">Phone</label>
-                        <input
-                            type="text"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Votre Phone"
-                        />
+                  <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="w-full">
+                      <label class="text-gray-600 text-sm mb-1 block">Nom</label>
+                      <input
+                        type="text"
+                        [(ngModel)]="user.nom"
+                        name="nom"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Charlene Reed"
+                        [value]="user.nom"
+                      />
                     </div>
-                    <div>
-                        <label class="text-gray-600 text-sm mb-1 block">Email</label>
-                        <input
-                            type="email"
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="charlenereed@gmail.com"
-                        />
+                    <div class="w-full">
+                      <label class="text-gray-600 text-sm mb-1 block">Prenom</label>
+                      <input
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Votre Prenom"
+                      />
                     </div>
+                    <div class="w-full">
+                      <label class="text-gray-600 text-sm mb-1 block">Email</label>
+                      <input
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Votre email"
+                      />
+                    </div>
+                    <div class="w-full">
+                      <label class="text-gray-600 text-sm mb-1 block">Phone</label>
+                      <input
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Votre Phone"
+                      />
+                    </div>
+                  </div>
+
                 </div>
                <div>
                 <button
