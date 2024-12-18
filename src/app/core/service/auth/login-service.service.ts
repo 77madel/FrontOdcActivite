@@ -148,7 +148,7 @@ export class LoginServiceService {
    * Récupère les informations utilisateur depuis le localStorage
    * @returns L'objet utilisateur ou null
    */
-  getUserFromLocalStorage(): { bearer?: string, role?: string[], email?: string } | null {
+  getUserFromLocalStorage(): { bearer?: string, role?: string[], email?: string, id?: number } | null {
     let user = null;
 
     if (UtilFunction.isBrowser()) {
@@ -160,6 +160,26 @@ export class LoginServiceService {
       }
     }
     return user;
+  }
+
+  getUserpourprofilFromLocalStorage(): { id?: number, email?: string, role?: string } | null {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.bearer) {
+          const decodedToken = this.getDecodedToken(user.bearer);
+          return {
+            id: decodedToken.id,
+            email: decodedToken.sub,
+            role: decodedToken.role,
+          };
+        }
+      } catch (error) {
+        console.error('Erreur lors du parsing de localStorage ou du décodage du token:', error);
+      }
+    }
+    return null;
   }
 
   getUserData(token: string): Observable<any> {
@@ -186,5 +206,44 @@ export class LoginServiceService {
       console.log(roles)
     }
     return [];
+  }
+
+  /**
+   * Demande de réinitialisation de mot de passe
+   * @param email - L'adresse email de l'utilisateur
+   * @returns Observable pour suivre l'état de la requête
+   */
+  requestPasswordReset(email: string): Observable<any> {
+    const url = `${this.BASE_URL}/auth/request-password-reset`;
+    const payload = { email };
+    return this.http.post<{ message: string }>(url, payload).pipe(
+      map(response => {
+        console.log(response.message); // Assurez-vous d'utiliser la clé JSON correcte
+        return response.message;
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Réinitialisation du mot de passe avec un nouveau mot de passe
+   * @param token - Jeton reçu par email
+   * @param newPassword - Le nouveau mot de passe
+   * @returns Observable pour suivre l'état de la requête
+   */
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    const url = `${this.BASE_URL}/auth/reset-password`;
+    const payload = { token, newPassword };
+    return this.http.post(url, payload).pipe(
+      map((response) => {
+        console.log('Réponse du backend :', response);
+        // Vérifie que le backend a retourné un message
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Erreur reçue:', error);
+        throw error;
+      }),
+    );
   }
 }

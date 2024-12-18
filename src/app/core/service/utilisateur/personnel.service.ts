@@ -59,4 +59,15 @@ export class PersonnelService {
     }
   }
 
+  async updateProfil(id: number, data: any): Promise<any> {
+    const url = `${this.BASE_URL}/personnel/modifier/${id}`;
+    try {
+      const response = await this.http.patch<any>(url, data).toPromise();
+      return response;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du profil :', error);
+      throw error;
+    }
+  }
+
 }
