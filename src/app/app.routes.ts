@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuardService } from './core';
+import { AjoutActiviteComponent } from './Component/Personnels/activity/ajout-activite/ajout-activite.component';
+import {UpdateActiviteComponent} from './Component/Personnels/activity/update-activite/update-activite.component';
 
 // Détection de l'environnement (SSR ou navigateur)
 function isBrowser() {
@@ -72,6 +74,16 @@ export const routes: Routes = [
   {
     path: 'activity',
     loadComponent: () => import('./Component/Personnels/activity/activity.component').then(c => c.ActivityComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'ajout-activite',
+    loadComponent: () => import('./Component/Personnels/activity/ajout-activite/ajout-activite.component').then(c => AjoutActiviteComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'update-activite/:id',
+    loadComponent: () => import('./Component/Personnels/activity/update-activite/update-activite.component').then(c => UpdateActiviteComponent),
     canActivate: [AuthGuardService]
   },
   {

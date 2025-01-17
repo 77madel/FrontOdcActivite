@@ -200,7 +200,7 @@ export class ParticipantComponent implements OnInit {
       const selectedActivite = this.activites.find((a) => a.id === Number(selectedActiviteId));
       console.log('Activité sélectionnée :', selectedActivite);
 
-      this.filteredEtapes = selectedActivite && selectedActivite.etape ? selectedActivite.etape : [];
+      this.filteredEtapes = selectedActivite && selectedActivite.etapes ? selectedActivite.etapes : [];
       console.log('Étapes filtrées :', this.filteredEtapes);
     } else {
       // Si aucune activité n'est sélectionnée, afficher toutes les étapes
@@ -242,16 +242,16 @@ export class ParticipantComponent implements OnInit {
     // Filtrage par étape
     if (filters.searchEtape) {
       filtered = filtered.filter(participant =>
-        participant.activite?.etape &&
-        participant.activite.etape.some((etape: Etape) => etape.nom === filters.searchEtape)
+        participant.activite?.etapes &&
+        participant.activite.etapes.some((etape: Etape) => etape.nom === filters.searchEtape)
       );
     }
 
     // Filtrage par liste
     if (filters.searchListType) {
       filtered = filtered.filter(participant =>
-        participant.activite?.etape &&
-        participant.activite.etape.some((etape: Etape) => {
+        participant.activite?.etapes &&
+        participant.activite.etapes.some((etape: Etape) => {
           if (filters.searchListType === 'listeDebut') {
             return etape.listeDebut && etape.listeDebut.length > 0;
           } else if (filters.searchListType === 'listeResultat') {

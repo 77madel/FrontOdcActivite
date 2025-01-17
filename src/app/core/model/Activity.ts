@@ -12,14 +12,14 @@ export class Activity{
   dateDebut?: Date;
   dateFin?: Date;
   statut?: string;
-  etape?: Etape[];
+  etapes?: Etape[];
   entite?: Entite;
   typeActivite?: TypeActivite;
 
   constructor(data?: Partial<Activity>) {
     if (data) {
       Object.assign(this, data);
-      this.etape = Array.isArray(data.etape) ? data.etape : data.etape ? [data.etape] : [];
+      this.etapes = Array.isArray(data.etapes) ? data.etapes : data.etapes ? [data.etapes] : [];
     }
   }
 }

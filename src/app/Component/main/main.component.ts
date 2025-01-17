@@ -95,8 +95,8 @@ export class MainComponent implements OnInit {
   }
 
   initializeChart() {
-    const hommeData = this.nombreGenre.find(g => g.genre === "homme")?.count || 0;
-    const femmeData = this.nombreGenre.find(g => g.genre === "femme")?.count || 0;
+    const hommeData = this.nombreGenre.find(g => g.genre === "Homme")?.count || 0;
+    const femmeData = this.nombreGenre.find(g => g.genre === "Femme")?.count || 0;
 
     this.chartOptions = {
       series: [
@@ -118,6 +118,7 @@ export class MainComponent implements OnInit {
     this.globalService.get("reporting/participants-par-genre").subscribe({
       next: (data) => {
         this.nombreGenre = data;
+        console.log("Reporting", this.nombreGenre);
         this.initializeChart();
       },
       error: (err) => console.error("Erreur lors de la récupération des données de genre :", err),
