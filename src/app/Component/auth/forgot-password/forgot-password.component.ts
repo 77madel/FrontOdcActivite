@@ -11,22 +11,21 @@ import {LoginServiceService} from '../../../core';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-forgot-password',
-  standalone: true,
-  imports: [
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSuffix,
-    RouterLink,
-    ReactiveFormsModule,
-    MatIcon,
-    FormsModule,
-    NgIf
-  ],
-  templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.scss'
+    selector: 'app-forgot-password',
+    imports: [
+        MatButton,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatSuffix,
+        RouterLink,
+        ReactiveFormsModule,
+        MatIcon,
+        FormsModule,
+        NgIf
+    ],
+    templateUrl: './forgot-password.component.html',
+    styleUrl: './forgot-password.component.scss'
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup; // FormGroup pour gérer le formulaire

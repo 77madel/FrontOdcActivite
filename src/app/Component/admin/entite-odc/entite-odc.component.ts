@@ -12,20 +12,19 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-entite-odc',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    FormsModule,
-  ],
-  templateUrl: './entite-odc.component.html',
-  styleUrl: './entite-odc.component.css'
+    selector: 'app-entite-odc',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        FormsModule,
+    ],
+    templateUrl: './entite-odc.component.html',
+    styleUrl: './entite-odc.component.css'
 })
 export class EntiteODCComponent implements OnInit {
   entiteList!: Entite[];

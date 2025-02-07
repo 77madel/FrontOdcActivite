@@ -4,20 +4,19 @@ import {Location, NgClass, NgForOf, NgIf} from '@angular/common';
 import { LoginServiceService } from '../../../core';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
-  standalone: true,
-  imports: [
-    NgClass,
-    NgForOf,
-    RouterLink,
-    RouterLinkActive,
-    NgIf
-  ],
-  host: {
-    class: 'sidebar'
-  }
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css'],
+    imports: [
+        NgClass,
+        NgForOf,
+        RouterLink,
+        RouterLinkActive,
+        NgIf
+    ],
+    host: {
+        class: 'sidebar'
+    }
 })
 export class SidebarComponent {
   navItems = [

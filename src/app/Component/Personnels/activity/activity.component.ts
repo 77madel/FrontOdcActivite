@@ -13,17 +13,16 @@ import * as CryptoJS from 'crypto-js';
 import {Salle} from '../../../core/model/Salle';
 
 @Component({
-  selector: 'app-activity',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule,
-    CommonModule
-  ],
-  templateUrl: './activity.component.html',
-  styleUrls: ['./activity.component.scss'] // Corrigé de styleUrl à styleUrls
+    selector: 'app-activity',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule,
+        CommonModule
+    ],
+    templateUrl: './activity.component.html',
+    styleUrls: ['./activity.component.scss'] // Corrigé de styleUrl à styleUrls
 })
 export class ActivityComponent {
 

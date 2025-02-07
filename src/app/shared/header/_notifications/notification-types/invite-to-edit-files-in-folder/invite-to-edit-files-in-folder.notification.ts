@@ -6,16 +6,15 @@ import { MatButton } from '@angular/material/button';
 import { Notification } from '../../types';
 
 @Component({
-  selector: 'app-invite-to-edit-files-in-folder',
-  standalone: true,
-  imports: [
-    MatIcon,
-    MatRipple,
-    RouterLink,
-    MatButton,
-  ],
-  templateUrl: './invite-to-edit-files-in-folder.notification.html',
-  styleUrl: './invite-to-edit-files-in-folder.notification.scss'
+    selector: 'app-invite-to-edit-files-in-folder',
+    imports: [
+        MatIcon,
+        MatRipple,
+        RouterLink,
+        MatButton,
+    ],
+    templateUrl: './invite-to-edit-files-in-folder.notification.html',
+    styleUrl: './invite-to-edit-files-in-folder.notification.scss'
 })
 export class InviteToEditFilesInFolderNotification {
   @Input()

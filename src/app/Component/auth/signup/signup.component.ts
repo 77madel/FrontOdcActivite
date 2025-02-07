@@ -6,19 +6,18 @@ import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSuffix,
-    RouterLink,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.scss'
+    selector: 'app-signup',
+    imports: [
+        MatButton,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatSuffix,
+        RouterLink,
+        ReactiveFormsModule,
+    ],
+    templateUrl: './signup.component.html',
+    styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
   private _formBuilder = inject(FormBuilder);

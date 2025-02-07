@@ -6,16 +6,15 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-black-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  templateUrl: './black-list.component.html',
-  styleUrl: './black-list.component.scss'
+    selector: 'app-black-list',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule
+    ],
+    templateUrl: './black-list.component.html',
+    styleUrl: './black-list.component.scss'
 })
 export class BlackListComponent implements OnInit {
   blackList!: BlackList[];

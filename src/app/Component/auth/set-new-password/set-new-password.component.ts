@@ -11,22 +11,21 @@ import {LoginServiceService} from '../../../core';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-set-new-password',
-  standalone: true,
-  imports: [
-    MatIcon,
-    RouterLink,
-    FormsModule,
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    ReactiveFormsModule,
-    MatHint,
-    NgIf
-  ],
-  templateUrl: './set-new-password.component.html',
-  styleUrl: './set-new-password.component.scss'
+    selector: 'app-set-new-password',
+    imports: [
+        MatIcon,
+        RouterLink,
+        FormsModule,
+        MatButton,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        ReactiveFormsModule,
+        MatHint,
+        NgIf
+    ],
+    templateUrl: './set-new-password.component.html',
+    styleUrl: './set-new-password.component.scss'
 })
 export class SetNewPasswordComponent implements OnInit {
   token = '';

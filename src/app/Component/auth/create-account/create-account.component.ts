@@ -6,20 +6,19 @@ import { MatInput } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-create-account',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    ReactiveFormsModule,
-    RouterLink,
-    MatError,
-  ],
-  templateUrl: './create-account.component.html',
-  styleUrl: './create-account.component.scss'
+    selector: 'app-create-account',
+    imports: [
+        FormsModule,
+        MatButton,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        ReactiveFormsModule,
+        RouterLink,
+        MatError,
+    ],
+    templateUrl: './create-account.component.html',
+    styleUrl: './create-account.component.scss'
 })
 export class CreateAccountComponent {
   private _formBuilder = inject(FormBuilder);

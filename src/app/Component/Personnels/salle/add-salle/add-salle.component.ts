@@ -16,14 +16,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 
 @Component({
-  selector: 'app-add-salle',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './add-salle.component.html',
-  styleUrl: './add-salle.component.css'
+    selector: 'app-add-salle',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    templateUrl: './add-salle.component.html',
+    styleUrl: './add-salle.component.css'
 })
 export class AddSalleComponent {
 

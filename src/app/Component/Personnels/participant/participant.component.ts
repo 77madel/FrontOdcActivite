@@ -15,16 +15,15 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Component({
-  selector: 'app-participant',
-  templateUrl: './participant.component.html',
-  standalone: true,
-  imports: [
-    NgClass,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  styleUrls: ['./participant.component.scss']
+    selector: 'app-participant',
+    templateUrl: './participant.component.html',
+    imports: [
+        NgClass,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule
+    ],
+    styleUrls: ['./participant.component.scss']
 })
 export class ParticipantComponent implements OnInit {
   // Colonnes affichées dans la table

@@ -8,13 +8,12 @@ import autoTable, { RowInput } from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 
 @Component({
-  selector: 'app-liste-debut',
-  standalone: true,
-  imports: [
-    CommonModule
-  ],
-  templateUrl: './liste-debut.component.html',
-  styleUrl: './liste-debut.component.css'
+    selector: 'app-liste-debut',
+    imports: [
+        CommonModule
+    ],
+    templateUrl: './liste-debut.component.html',
+    styleUrl: './liste-debut.component.css'
 })
 export class ListeDebutComponent implements OnInit {
   [x: string]: any;

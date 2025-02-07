@@ -6,11 +6,10 @@ import {FormsModule} from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-entite-detail',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './entite-detail.component.html',
-  styleUrls: ['./entite-detail.component.css'],
+    selector: 'app-entite-detail',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './entite-detail.component.html',
+    styleUrls: ['./entite-detail.component.css']
 })
 export class EntiteDetailComponent implements OnInit {
   entite: Entite | null = null;

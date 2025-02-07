@@ -12,19 +12,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-role',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatCardModule,
-  ],
-  templateUrl: './role.component.html',
-  styleUrls: ['./role.component.scss']
+    selector: 'app-role',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatCardModule,
+    ],
+    templateUrl: './role.component.html',
+    styleUrls: ['./role.component.scss']
 })
 export class RoleComponent implements OnInit {
   displayedColumns: string[] = ['nom', 'actions'];

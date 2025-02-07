@@ -16,16 +16,15 @@ import {Router} from '@angular/router';
 import {Salle} from '../../../../core/model/Salle';
 
 @Component({
-  selector: 'app-ajout-activite',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  templateUrl: './ajout-activite.component.html',
-  styleUrl: './ajout-activite.component.css'
+    selector: 'app-ajout-activite',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule
+    ],
+    templateUrl: './ajout-activite.component.html',
+    styleUrl: './ajout-activite.component.css'
 })
 export class AjoutActiviteComponent {
   activiteToAdd: Activity = new Activity();

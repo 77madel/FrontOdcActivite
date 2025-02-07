@@ -9,14 +9,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 
 @Component({
-  selector: 'app-update-salle',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './update-salle.component.html',
-  styleUrl: './update-salle.component.css'
+    selector: 'app-update-salle',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    templateUrl: './update-salle.component.html',
+    styleUrl: './update-salle.component.css'
 })
 export class UpdateSalleComponent {
 

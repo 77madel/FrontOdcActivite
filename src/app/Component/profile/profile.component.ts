@@ -8,14 +8,13 @@ import Swal from 'sweetalert2';
 import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+    selector: 'app-profile',
+    imports: [
+        CommonModule,
+        FormsModule
+    ],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
   activeTab: string = 'profile'; // Onglet actif par défaut

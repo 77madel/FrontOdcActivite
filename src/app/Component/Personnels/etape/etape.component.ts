@@ -35,27 +35,26 @@ interface EtapeDTO {
 }
 
 @Component({
-  selector: 'app-etape',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatOptionModule,
-    ReactiveFormsModule,
-    FormsModule,
-    RouterLink,
-    ListeFiltreComponent
-  ],
-  templateUrl: './etape.component.html',
-  styleUrls: ['./etape.component.scss']
+    selector: 'app-etape',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatOptionModule,
+        ReactiveFormsModule,
+        FormsModule,
+        RouterLink,
+        ListeFiltreComponent
+    ],
+    templateUrl: './etape.component.html',
+    styleUrls: ['./etape.component.scss']
 })
 export class EtapeComponent implements OnInit {
 

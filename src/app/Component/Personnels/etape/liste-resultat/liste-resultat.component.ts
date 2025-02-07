@@ -8,13 +8,12 @@ import autoTable, {RowInput} from 'jspdf-autotable';
 import {exportToExcel} from '../../../utils/export-utils';
 
 @Component({
-  selector: 'app-liste-resultat',
-  standalone: true,
-  imports: [
-    NgForOf
-  ],
-  templateUrl: './liste-resultat.component.html',
-  styleUrl: './liste-resultat.component.css'
+    selector: 'app-liste-resultat',
+    imports: [
+        NgForOf
+    ],
+    templateUrl: './liste-resultat.component.html',
+    styleUrl: './liste-resultat.component.css'
 })
 export class ListeResultatComponent implements OnInit{
 

@@ -7,15 +7,14 @@ import {isPlatformBrowser, NgIf, NgOptimizedImage} from '@angular/common';
 import { LoginServiceService } from '../../../core';
 
 @Component({
-  selector: 'app-signin',
-  standalone: true,
-  imports: [
-    RouterLink,
-    FormsModule,
-    NgIf,
-  ],
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.scss']
+    selector: 'app-signin',
+    imports: [
+        RouterLink,
+        FormsModule,
+        NgIf,
+    ],
+    templateUrl: './signin.component.html',
+    styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
 

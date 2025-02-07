@@ -6,16 +6,15 @@ import {NgForOf, NgIf} from "@angular/common";
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-type-acticite',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  templateUrl: './type-acticite.component.html',
-  styleUrl: './type-acticite.component.scss'
+    selector: 'app-type-acticite',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule
+    ],
+    templateUrl: './type-acticite.component.html',
+    styleUrl: './type-acticite.component.scss'
 })
 export class TypeActiciteComponent implements OnInit {
   typeActiviteList!: TypeActivite[];

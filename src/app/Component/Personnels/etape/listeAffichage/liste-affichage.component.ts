@@ -7,11 +7,10 @@ import { ListeFiltreComponent } from '../liste-global/liste-filtre.component';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-listeAffichage',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './liste-affichage.component.html',
-  styleUrls: ['./liste-affichage.component.css']
+    selector: 'app-listeAffichage',
+    imports: [CommonModule],
+    templateUrl: './liste-affichage.component.html',
+    styleUrls: ['./liste-affichage.component.css']
 })
 export class ListeAffichageComponent implements OnInit {
 

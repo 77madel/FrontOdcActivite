@@ -6,11 +6,10 @@ import {GlobalCrudService} from '../../../../core';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-liste-filtre',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './liste-filtre.component.html',
-  styleUrls: ['./liste-filtre.component.css']
+    selector: 'app-liste-filtre',
+    imports: [CommonModule],
+    templateUrl: './liste-filtre.component.html',
+    styleUrls: ['./liste-filtre.component.css']
 })
 export class ListeFiltreComponent {
 

@@ -11,19 +11,18 @@ import {NgForOf, NgIf} from '@angular/common';
 import * as CryptoJS from 'crypto-js';
 
 @Component({
-  selector: 'app-salle',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    AngularSvgIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    DataTableModule,
-    NgForOf,
-    NgIf,
-  ],
-  templateUrl: './salle.component.html',
-  styleUrl: './salle.component.css'
+    selector: 'app-salle',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        AngularSvgIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        DataTableModule,
+        NgForOf,
+        NgIf,
+    ],
+    templateUrl: './salle.component.html',
+    styleUrl: './salle.component.css'
 })
 export class SalleComponent  implements OnInit {
 

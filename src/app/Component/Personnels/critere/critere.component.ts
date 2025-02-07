@@ -15,22 +15,21 @@ import {CritereService, Critere, LoginServiceService} from "../../../core";
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-critere',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInput,
-    MatCardModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  templateUrl: './critere.component.html',
-  styleUrl: './critere.component.scss'
+    selector: 'app-critere',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInput,
+        MatCardModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+    ],
+    templateUrl: './critere.component.html',
+    styleUrl: './critere.component.scss'
 })
 export class CritereComponent implements OnInit {
 

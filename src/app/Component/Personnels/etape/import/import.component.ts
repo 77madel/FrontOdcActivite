@@ -8,16 +8,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 
 @Component({
-  selector: 'app-import',
-  standalone: true,
+    selector: 'app-import',
     imports: [
-      FormsModule,
-      NgIf,
-      ReactiveFormsModule,
-      CommonModule,
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+        CommonModule,
     ],
-  templateUrl: './import.component.html',
-  styleUrl: './import.component.css'
+    templateUrl: './import.component.html',
+    styleUrl: './import.component.css'
 })
 export class ImportComponent implements OnInit{
 

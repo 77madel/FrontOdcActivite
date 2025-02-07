@@ -6,15 +6,14 @@ import {NgForOf, NgIf} from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-employer',
-  standalone: true,
-  templateUrl: './employer.component.html',
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf
-  ],
-  styleUrls: ['./employer.component.scss']
+    selector: 'app-employer',
+    templateUrl: './employer.component.html',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./employer.component.scss']
 })
 export class EmployerComponent implements OnInit {
 

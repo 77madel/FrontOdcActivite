@@ -9,16 +9,15 @@ import * as CryptoJS from 'crypto-js';
 import {Salle} from '../../../../core/model/Salle';
 
 @Component({
-  selector: 'app-update-activite',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    NgForOf,
-    NgIf
-  ],
-  templateUrl: './update-activite.component.html',
-  styleUrls: ['./update-activite.component.css']
+    selector: 'app-update-activite',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        NgForOf,
+        NgIf
+    ],
+    templateUrl: './update-activite.component.html',
+    styleUrls: ['./update-activite.component.css']
 })
 export class UpdateActiviteComponent implements OnInit {
   @Input() selectedActivite!: Activity;

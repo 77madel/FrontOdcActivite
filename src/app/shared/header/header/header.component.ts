@@ -4,11 +4,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [RouterLink, NgIf],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    imports: [RouterLink, NgIf],
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
 

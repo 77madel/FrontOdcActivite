@@ -2,11 +2,10 @@ import {Component, Input} from '@angular/core';
 import {Activity, Etape, EtapeService} from '../../../../core';
 
 @Component({
-  selector: 'app-etape-activite',
-  standalone: true,
-  imports: [],
-  templateUrl: './etape-activite.component.html',
-  styleUrl: './etape-activite.component.css'
+    selector: 'app-etape-activite',
+    imports: [],
+    templateUrl: './etape-activite.component.html',
+    styleUrl: './etape-activite.component.css'
 })
 export class EtapeActiviteComponent {
 

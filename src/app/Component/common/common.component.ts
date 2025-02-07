@@ -4,15 +4,14 @@ import { HeaderComponent } from '../../shared/header/header/header.component';
 import { SidebarComponent } from '../../shared/sidebar/sidebar/sidebar.component';
 
 @Component({
-  selector: 'app-common',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent,
-    SidebarComponent
-  ],
-  templateUrl: './common.component.html',
-  styleUrl: './common.component.scss'
+    selector: 'app-common',
+    imports: [
+        RouterOutlet,
+        HeaderComponent,
+        SidebarComponent
+    ],
+    templateUrl: './common.component.html',
+    styleUrl: './common.component.scss'
 })
 export class CommonComponent {
 
