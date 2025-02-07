@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {EtapeService} from '../../../../core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../../../../core/interface/Person';
 import { exportToExcel } from '../../../utils/export-utils';
+import autoTable, { RowInput } from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-liste-debut',
@@ -44,8 +46,13 @@ export class ListeDebutComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private etapeService: EtapeService
+    private etapeService: EtapeService,
+    private router:Router
   ) {}
+
+  retour(): void {
+    this.router.navigate(["/etape"])
+  }
 
 
   exportExcel(): void {
@@ -58,6 +65,40 @@ export class ListeDebutComponent implements OnInit {
       Activité: item.activite.nom,
     })), 'Liste_Debut');
   }
+
+  exportPDF(): void {
+    const doc = new jsPDF();
+
+    // Titre du document
+    const title = 'Liste debut des Participants';
+    doc.setFontSize(16);
+    doc.text(title, 14, 15);
+
+    // Préparer les données pour le tableau (convertir undefined en chaînes vides)
+    const tableData = this.listeDebut.map(item => [
+      item.nom || '',
+      item.prenom || '',
+      item.email || '',
+      item.genre || '',
+      item.phone || '',
+      item.activite?.nom || '' // Utiliser '?' pour gérer les propriétés potentiellement nulles ou undefined
+    ]);
+
+    // Préparer les en-têtes
+    const tableHeaders = ['Nom', 'Prénom', 'Email', 'Genre', 'Téléphone', 'Activité'];
+
+    // Ajouter le tableau au PDF
+    autoTable(doc, {
+      head: [tableHeaders],
+      body: tableData as RowInput[], // Caster en RowInput pour éviter les erreurs de type
+      startY: 20, // Positionner le tableau en dessous du titre
+    });
+
+    // Télécharger le PDF
+    doc.save('Liste_Debut_Participants.pdf');
+  }
+
+
 
   // exportPDF(): void {
   //   exportToPDF(this.listeDebut, ['Nom', 'Prénom', 'Email', 'Genre', 'Téléphone', 'Activité'], 'Liste_Resultats');

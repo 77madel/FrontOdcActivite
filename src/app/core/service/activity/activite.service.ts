@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { Etape } from '../../model/Etape';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,10 @@ export class ActiviteService {
     }catch(error){
       throw error;
     }
+  }
+
+  getEtapeByIdFromApi(id: number): Observable<any> {
+    return this.http.get<any>(`${this.BASE_URL}/activite/${id}`);
   }
 
   async updateActivity(activityId: number, activityData: any, etape: Etape): Promise<any> {

@@ -5,7 +5,7 @@ import {
   EntiteOdcService,
   Etape,
   EtapeService,
-  GlobalCrudService,
+  GlobalCrudService, LoginServiceService,
   TypeActivite
 } from '../../../../core';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -13,6 +13,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
+import {Salle} from '../../../../core/model/Salle';
 
 @Component({
   selector: 'app-ajout-activite',
@@ -31,19 +32,25 @@ export class AjoutActiviteComponent {
   etape: Etape[] = [];
   entite: Entite[] = [];
   typeActivite: TypeActivite[] = [];
+  salleId: Salle[] = [];
+  userRoles: string[] = [];
 
   constructor(
     private globalService: GlobalCrudService,
     private etapeService: EtapeService,
     private entiteService: EntiteOdcService,
     private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
+    private router: Router,
+    private loginService: LoginServiceService
+  ) {
+    this.userRoles = this.loginService.getUserRoles();
+  }
 
   ngOnInit(): void {
     this.getEntite();
     this.getEtape();
     this.getAllTypeActivite();
+    this.getSalle();
   }
 
   retour(): void {
@@ -51,8 +58,16 @@ export class AjoutActiviteComponent {
   }
 
   ajouterActivity() {
-    if (!this.activiteToAdd.entite) {
-      // Gestion des erreurs
+    if (!this.activiteToAdd.salleId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Champs requis',
+        text: 'Veuillez sélectionner une salle avant de continuer.',
+        confirmButtonText: 'Ok',
+        customClass: {
+          confirmButton: 'bg-yellow-500 text-white hover:bg-yellow-600',
+        },
+      });
       return;
     }
     // Ajouter l'activité
@@ -76,17 +91,35 @@ export class AjoutActiviteComponent {
         });
         this.retour();
       },
-      error: (err: { error: { message: any; }; }) => {
-          console.error(err);
-          Swal.fire({
-            icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
-            confirmButtonText: 'Ok',
-            customClass: {
-              confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-            },
-          });
+      error: (err: { status: number; error: any; message?: string }) => {
+        console.error('Erreur reçue:', err);
+
+        let message = 'Une erreur est survenue. Veuillez réessayer.'; // Message par défaut
+        let title = '<span class="text-red-500">Échec</span>';
+
+        // Extraire le message d'erreur selon la structure réelle
+        if (err.error?.message) {
+          message = err.error.message; // Message spécifique du backend
+        } else if (err.message) {
+          message = err.message; // Message générique d'erreur
+        } else if (err.status === 409) {
+          Swal.fire('Conflit', 'La salle est déjà réservée pour ce créneau.', 'error');
+        }
+        else {
+          // Utiliser un message générique si aucune info spécifique n'est disponible
+          message = 'Erreur inconnue. Veuillez réessayer.';
+        }
+
+        // Afficher l'alerte
+        Swal.fire({
+          icon: 'error',
+          title: title,
+          text: message, // Afficher uniquement le message
+          confirmButtonText: 'Ok',
+          customClass: {
+            confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+          },
+        });
       }
     });
   }
@@ -96,6 +129,18 @@ export class AjoutActiviteComponent {
       next: (value) => {
         this.entite = value;
         console.log("Response Entite", this.entite);
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
+  }
+
+  getSalle() {
+    this.globalService.get("salle").subscribe({
+      next: (value) => {
+        this.salleId = value;
+        console.log("Response Salle", this.salleId);
       },
       error: (err: any) => {
         console.log(err);

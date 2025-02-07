@@ -1,5 +1,6 @@
 import { Entite } from "./Entite";
 import { Etape } from "./Etape";
+import { Salle } from "./Salle";
 import { TypeActivite } from "./TypeActivite";
 
 export class Activity{
@@ -15,6 +16,7 @@ export class Activity{
   etapes?: Etape[];
   entite?: Entite;
   typeActivite?: TypeActivite;
+  salleId?: Salle;
 
   constructor(data?: Partial<Activity>) {
     if (data) {

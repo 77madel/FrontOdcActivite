@@ -9,6 +9,7 @@
     <!--        *ngIf="userRoles.includes('PERSONNEL')"-->
     <div class="mt-3 flex-grow flex justify-end">
       <button
+        *ngIf="userRoles.includes('PERSONNEL')"
        (click)="naviguerVersFormulaire()"
         class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition duration-150 ease-in-out"
       >
@@ -21,99 +22,6 @@
   <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Rechercher..."
          class="w-full p-3 border border-orange-500 rounded-lg focus:ring-2 focus:ring-orange-500 mb-4" />
 
-  <!-- Formulaire d'ajout/modification -->
-<!--  <div *ngIf="isFormVisible" class="bg-white shadow-lg rounded-lg p-6 space-y-6">-->
-<!--    <h2 class="text-xl font-semibold text-gray-700">{{ isEditMode ? 'Modifier un élément' : 'Ajouter un élément' }}</h2>-->
-<!--    <form (ngSubmit)="ajouterActivity()" class="space-y-4">-->
-
-<!--      &lt;!&ndash; Nom et Titre &ndash;&gt;-->
-<!--      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-<!--        <div>-->
-<!--          <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>-->
-<!--          <input id="nom" type="text" name="nom" [(ngModel)]="activiteToAdd.nom" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <label for="titre" class="block text-sm font-medium text-gray-700">Titre</label>-->
-<!--          <input id="titre" type="text" name="titre" [(ngModel)]="activiteToAdd.titre" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Description et Lieu &ndash;&gt;-->
-<!--      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-<!--        <div>-->
-<!--          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>-->
-<!--          <input id="description" type="text" name="description" [(ngModel)]="activiteToAdd.description" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <label for="lieu" class="block text-sm font-medium text-gray-700">Lieu</label>-->
-<!--          <input id="lieu" type="text" name="lieu" [(ngModel)]="activiteToAdd.lieu" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Objectif Participant et Date de Début &ndash;&gt;-->
-<!--      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-<!--        <div>-->
-<!--          <label for="objectif" class="block text-sm font-medium text-gray-700">Objectif Participant</label>-->
-<!--          <input id="objectif" type="number" name="objectifParticipation" [(ngModel)]="activiteToAdd.objectifParticipation" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <label for="dateDebut" class="block text-sm font-medium text-gray-700">Date Début</label>-->
-<!--          <input id="dateDebut" type="date" name="dateDebut" [(ngModel)]="activiteToAdd.dateDebut" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Date de Fin &ndash;&gt;-->
-<!--      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-<!--        <div>-->
-<!--          <label for="dateFin" class="block text-sm font-medium text-gray-700">Date Fin</label>-->
-<!--          <input id="dateFin" type="date" name="dateFin" [(ngModel)]="activiteToAdd.dateFin" required-->
-<!--                 class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full" />-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--          <label for="entite" class="block text-sm font-medium text-gray-700">Entité</label>-->
-<!--          <select id="entite" name="entite" [(ngModel)]="activiteToAdd.entite" required-->
-<!--                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">-->
-<!--            <option *ngFor="let option of entite" [value]="option.id">{{ option.nom }}</option>-->
-<!--          </select>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-<!--        <div>-->
-<!--          <label for="typeActivite" class="block text-sm font-medium text-gray-700">Type Activité</label>-->
-<!--          <select id="typeActivite" name="typeActivite" [(ngModel)]="activiteToAdd.typeActivite" required-->
-<!--                  class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">-->
-<!--            <option *ngFor="let option of typeActivite" [value]="option.id">{{ option.type }}</option>-->
-<!--          </select>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; Boucle pour afficher les étapes avec cases à cocher &ndash;&gt;-->
-<!--        <div *ngIf="isEditMode">-->
-<!--          <div *ngFor="let option of etape" class="mb-4">-->
-<!--            <label class="block text-sm font-medium text-gray-700">{{ option.nom }}</label>-->
-<!--            <input type="checkbox" name="etape{{ option.id }}" [(ngModel)]="option.selected"-->
-<!--                   (change)="updateSelectedEtapes()"-->
-<!--                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 mt-2" />-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Bouton de soumission &ndash;&gt;-->
-<!--      <div class="flex justify-end">-->
-<!--        <button  type="submit" class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-orange-600 transition">-->
-<!--          {{ isEditMode ? 'Modifier' : 'Ajouter' }}-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </form>-->
-<!--  </div>-->
-
   <!-- Table d'activités -->
   <div  class="bg-white shadow-lg rounded-lg p-6">
     <table class="w-full text-left">
@@ -125,6 +33,7 @@
         <th class="p-3">Objectif Participant</th>
         <th class="p-3">Entité</th>
         <th class="p-3">Type Activité</th>
+        <th class="p-3">Salle</th>
         <th class="p-3">Statut</th>
         <th class="p-3">Actions</th>
         <th class="p-3"></th>
@@ -138,6 +47,7 @@
         <td class="p-3">{{ element.objectifParticipation }}</td>
         <td class="p-3">{{ element.entite?.nom }}</td>
         <td class="p-3">{{ element.typeActivite?.type }}</td>
+        <td class="p-3">{{ element.salleId?.nom }}</td>
 
         <td class="p-3">
             <span class="px-3 py-1 rounded-full text-white text-xs font-semibold"
@@ -150,7 +60,7 @@
             </span>
         </td>
 <!--        *ngIf="userRoles.includes('PERSONNEL')"-->
-        <td  class="p-3 flex gap-2">
+        <td  class="p-3 flex gap-2" *ngIf="userRoles.includes('PERSONNEL')">
           <button  class="text-bg-dark hover:text-orange-500">
             <i class="fas fa-eye"></i>
           </button>
@@ -163,28 +73,28 @@
         </td>
 
         <!-- Message si aucune étape n'est disponible pour l'activité -->
-        <td *ngIf="!element.etape || element.etape.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-red-500 dark:text-red-400 blink text-red-500">
+        <td *ngIf="!element.etapes || element.etapes.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-red-500 dark:text-red-400 blink text-red-500">
           Cette activité n'a pas d'étapes.
         </td>
       </tr>
-<!--      <tr *ngIf="!paginatedActivite || paginatedActivite.length === 0">-->
-<!--        <td colspan="7" class="p-3 text-center text-gray-500">Aucune activité disponible pour le moment.</td>-->
-<!--      </tr>-->
+      <tr *ngIf="!activiteList || activiteList.length === 0">
+        <td colspan="7" class="p-3 text-center text-gray-500">Aucune activité disponible pour le moment.</td>
+      </tr>
       </tbody>
     </table>
 
     <!-- Pagination -->
-<!--    <div class="flex justify-center mt-6 space-x-2">-->
-<!--      <button (click)="prevPage()" [disabled]="currentPage === 1"-->
-<!--              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">-->
-<!--        <i class="fas fa-chevron-left"></i>-->
-<!--      </button>-->
-<!--      <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>-->
-<!--      <button (click)="nextPage()" [disabled]="currentPage === totalPages"-->
-<!--              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">-->
-<!--        <i class="fas fa-chevron-right"></i>-->
-<!--      </button>-->
-<!--    </div>-->
+    <div class="flex justify-center mt-6 space-x-2">
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
 
   </div>
 </div>

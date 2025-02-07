@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -23,6 +23,8 @@ import { MatNativeDateModule, MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import Swal from 'sweetalert2';
 import * as CryptoJS from 'crypto-js';
+import {ListeFiltreComponent} from './liste-global/liste-filtre.component';
+import {MatDialog} from '@angular/material/dialog';
 
 interface EtapeDTO {
   id: number;
@@ -49,27 +51,23 @@ interface EtapeDTO {
     MatOptionModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    ListeFiltreComponent
   ],
   templateUrl: './etape.component.html',
   styleUrls: ['./etape.component.scss']
 })
 export class EtapeComponent implements OnInit {
-  displayedColumns: string[] = ['nom', 'statut', 'critere', 'actions'];
-  nouvelleEtape: EtapeDTO = { id: 0, nom: '', statut: '', listeDebut: [], listeResultat: [] };
-  selectedFile: File | null = null;
-  uploadForm: FormGroup | undefined;
+
   addElementForm: FormGroup;
   errorMessage: string = '';
-  isUploadFormVisible: boolean = false;
   isFormVisible: boolean = false;
   isTableVisible: boolean = true;
   isEditMode = false;
   currentEtapeId: number | undefined;
   currentEtapeNom: string | null = null;
-  uploading: boolean = false;
 
-  statutOptions: string[] = ['En_Attente', 'En_Cours', 'Termine'];
+
   etapes: Etape[] = [];
   criteres: Critere[] = [];
   dateDebut?: Date;
@@ -79,11 +77,11 @@ export class EtapeComponent implements OnInit {
 
   visibleLists: { [key: number]: boolean } = {};
 
-  toggleListVisibility(id: number | undefined): void {
-    if (id !== undefined) {
-      this.visibleLists[id] = !this.visibleLists[id];
-    }
-  }
+  // toggleListVisibility(id: number | undefined): void {
+  //   if (id !== undefined) {
+  //     this.visibleLists[id] = !this.visibleLists[id];
+  //   }
+  // }
 
   itemsPerPage = 5;
   currentPage = 1;
@@ -95,7 +93,8 @@ export class EtapeComponent implements OnInit {
     private snackBar: MatSnackBar,
     private critereService: CritereService,
     private router: Router,
-    private loginService: LoginServiceService
+    private loginService: LoginServiceService,
+    private dialog: MatDialog
 
   ) {
     this.addElementForm = this.fb.group({

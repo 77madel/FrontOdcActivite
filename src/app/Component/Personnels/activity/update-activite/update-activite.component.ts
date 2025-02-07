@@ -5,6 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import Swal from 'sweetalert2';
+import * as CryptoJS from 'crypto-js';
+import {Salle} from '../../../../core/model/Salle';
 
 @Component({
   selector: 'app-update-activite',
@@ -26,6 +28,7 @@ export class UpdateActiviteComponent implements OnInit {
   typeActivite: TypeActivite[] = [];
   activityId: any;
   selectedEtapes: Etape[] = [];
+  salleId: Salle[] = [];
 
   constructor(
     private globalService: GlobalCrudService,
@@ -48,25 +51,59 @@ export class UpdateActiviteComponent implements OnInit {
     this.getEntite();
     this.getAllTypeActivite();
     this.getAllActivite();
+    this.getSalle();
   }
 
+  // getAllActivite() {
+  //   this.activityId = this.route.snapshot.paramMap.get('id')
+  //   if (this.activityId) {
+  //
+  //     this.globalService.get('activite/' + this.activityId).subscribe({
+  //       next: (data: Activity) => {
+  //         this.activiteToUpdate = data;
+  //         console.log("Activité à mettre à jour :", this.activiteToUpdate);
+  //       },
+  //       error: (error) => {
+  //         console.error('Erreur lors de la récupération de l\'activité:', error);
+  //         // Gérer l'erreur, par exemple afficher un message d'erreur à l'utilisateur
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Aucun ID d\'activité fourni.');
+  //     // Gérer le cas où aucun ID n'est fourni, par exemple rediriger vers une autre page
+  //   }
+  // }
+
   getAllActivite() {
-    this.activityId = this.route.snapshot.paramMap.get('id')
-    console.log("GetByID",this.activityId)
-    if (this.activityId) {
-      this.globalService.get('activite/' + this.activityId).subscribe({
-        next: (data: Activity) => {
-          this.activiteToUpdate = data;
-          console.log("Activité à mettre à jour :", this.activiteToUpdate);
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération de l\'activité:', error);
-          // Gérer l'erreur, par exemple afficher un message d'erreur à l'utilisateur
-        }
-      });
+    const encryptedId = this.route.snapshot.paramMap.get('id');
+    if (encryptedId) {
+      // Décrypter l'ID
+      const bytes = CryptoJS.AES.decrypt(encryptedId, 'secretKey');
+      const decryptedId = bytes.toString(CryptoJS.enc.Utf8);
+
+      if (decryptedId) {
+        // L'ID est maintenant décrypté et nous pouvons l'utiliser pour la requête
+        this.activityId = parseInt(decryptedId, 10); // Convertir en nombre
+        console.log("ID d'activité décrypté:", this.activityId);
+
+        // Requête pour récupérer les détails de l'activité
+        this.globalService.get('activite/' + this.activityId).subscribe({
+          next: (data: Activity) => {
+            this.activiteToUpdate = data;
+            console.log("Activité à mettre à jour :", this.activiteToUpdate);
+          },
+          error: (error) => {
+            console.error('Erreur lors de la récupération de l\'activité:', error);
+            // Gérer l'erreur, par exemple afficher un message d'erreur à l'utilisateur
+          }
+        });
+      } else {
+        console.error('Échec du décryptage de l\'ID');
+        // Gérer le cas où le décryptage échoue
+      }
     } else {
       console.error('Aucun ID d\'activité fourni.');
-      // Gérer le cas où aucun ID n'est fourni, par exemple rediriger vers une autre page
+      // Gérer le cas où aucun ID n'est fourni
     }
   }
 
@@ -87,6 +124,14 @@ export class UpdateActiviteComponent implements OnInit {
     });
   }
 
+  getSalle() {
+    this.globalService.get('salle').subscribe(salleId => {
+      this.salleId = salleId;
+      // Si vous avez une entité par défaut, vous pouvez la pré-sélectionner ici
+      this.activiteToUpdate.salleId = salleId[0].id; // Par exemple
+    });
+  }
+
   getAllTypeActivite() {
     this.globalService.get('typeActivite').subscribe({
       next: (data) => {
@@ -102,43 +147,7 @@ export class UpdateActiviteComponent implements OnInit {
     this.router.navigate(['./activity']);
   }
 
-  // modifierActivite() {
-  //   if (this.activiteToUpdate.id) {
-  //     this.globalService.update('activite', this.activiteToUpdate.id, this.activiteToUpdate).subscribe({
-  //       next: () => {
-  //         const Toast = Swal.mixin({
-  //           toast: true,
-  //           position: "top-end",
-  //           showConfirmButton: false,
-  //           timer: 3000,
-  //           timerProgressBar: true,
-  //           didOpen: (toast) => {
-  //             toast.onmouseenter = Swal.stopTimer;
-  //             toast.onmouseleave = Swal.resumeTimer;
-  //           }
-  //         });
-  //         Toast.fire({
-  //           icon: "success",
-  //           title: "Modification opérée avec éclat."
-  //         });
-  //         this.retour();
-  //       },
-  //       error: (err: { error: { message: any; }; }) => {
-  //         Swal.fire({
-  //             icon: 'error',
-  //             title: '<span class="text-red-500">Échec</span>',
-  //             text: 'Une erreur est survenue. Veuillez réessayer.',
-  //             confirmButtonText: 'Ok',
-  //             customClass: {
-  //               confirmButton: 'bg-red-500 text-white hover:bg-red-600',
-  //             },
-  //           });
-  //       }
-  //     });
-  //   } else {
-  //     this.snackBar.open('Erreur : ID de l\'activité manquant.', 'Fermer', { duration: 3000 });
-  //   }
-  // }
+
 
   selectedEtapeIds: number[] = [];
   onEtapesChange() {
@@ -182,17 +191,34 @@ export class UpdateActiviteComponent implements OnInit {
           });
           this.retour();
         },
-        error: (err: { error: { message: any; }; }) => {
+        error: (err: { status: number; error: any; message?: string }) => {
+          console.error('Erreur reçue:', err);
+
+          let message = 'Une erreur est survenue. Veuillez réessayer.'; // Message par défaut
+          let title = '<span class="text-red-500">Échec</span>';
+
+          // Extraire le message d'erreur selon la structure réelle
+          if (err.error?.message) {
+            message = err.error.message; // Message spécifique du backend
+          } else if (err.message) {
+            message = err.message; // Message générique d'erreur
+          } else {
+            // Utiliser un message générique si aucune info spécifique n'est disponible
+            message = 'Erreur inconnue. Veuillez réessayer.';
+          }
+
+          // Afficher l'alerte
           Swal.fire({
             icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
+            title: title,
+            text: message, // Afficher uniquement le message
             confirmButtonText: 'Ok',
             customClass: {
               confirmButton: 'bg-red-500 text-white hover:bg-red-600',
             },
           });
         }
+
       });
     }
   }

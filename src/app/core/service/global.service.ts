@@ -1,6 +1,6 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {Observable, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 
 
 @Injectable({
@@ -39,7 +39,9 @@ export class GlobalCrudService {
    * @return {Observable<Object>} Un observable qui émet la réponse du serveur.
    */
   post(name: string, object: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}/${name}`, object);
+    return this.http.post(`${this.baseUrl}/${name}`, object).pipe(
+      catchError(this.handleError) // Ajout de la gestion des erreurs
+    );
   }
 
 
@@ -52,7 +54,9 @@ export class GlobalCrudService {
    * @return {Observable<Object>} Un observable qui émet l'objet mis à jour.
    */
   update(name: string,id: number, object: Object): Observable<Object> {
-    return this.http.patch(`${this.baseUrl}/${name}/${id}`, object);
+    return this.http.patch(`${this.baseUrl}/${name}/${id}`, object).pipe(
+      catchError(this.handleError) // Ajout de la gestion des erreurs
+    );
   }
 
   /**
@@ -63,18 +67,22 @@ export class GlobalCrudService {
    * @return {Observable<any>} Un observable qui émet la réponse du serveur.
    */
   delete(name: string,id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${name}/${id}`);
+    return this.http.delete(`${this.baseUrl}/${name}/${id}`).pipe(
+      catchError(this.handleError) // Ajout de la gestion des erreurs
+    );
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Une erreur est survenue';
+  // Gestion des erreurs
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Une erreur inconnue est survenue';
     if (error.error instanceof ErrorEvent) {
       // Erreur côté client
-      errorMessage = `Erreur: ${error.error.message}`;
+      errorMessage = `Erreur : ${error.error.message}`;
     } else {
-      // Erreur côté serveur
-      errorMessage = `Erreur ${error.status}: ${error.error}`;
+      // Erreur côté serveur, on n'affiche que le message d'erreur sans le code HTTP
+      errorMessage = error.error.message || error.message || 'Une erreur inconnue est survenue';
     }
     return throwError(() => new Error(errorMessage));
   }
+
 }

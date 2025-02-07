@@ -62,7 +62,13 @@
   </div>
 
   <!-- Table -->
-  <div *ngIf="isTableVisible" class="border rounded-lg overflow-hidden p-6 bg-white shadow-lg">
+  <div *ngIf="isTableVisible" class="border  rounded-lg overflow-hidden p-6 bg-white shadow-lg">
+
+    <button (click)="modal.openModal()" class="bg-black justify-end text-white px-4 py-2 rounded mb-2">
+      <i class="fas fa-file"></i>
+      Liste Globale
+    </button>
+
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-200">
         <thead class="bg-gray-50">
@@ -95,11 +101,6 @@
             <button (click)="openUploadForm(element.id, element.nom)" class="text-green-500 hover:text-green-700" aria-label="Upload Participants">
               <i class="fas fa-upload"></i>
             </button>
-<!--            <button (click)="navigateToImportPage(element.id, element.nom)"-->
-<!--                    class="text-green-500 hover:text-green-700"-->
-<!--                    aria-label="Upload Participants">-->
-<!--              <i class="fas fa-upload"></i>-->
-<!--            </button>-->
 
             <button *ngIf="element.listeDebut?.length"
                     [routerLink]="['/liste-debut', element.id]"
@@ -142,3 +143,6 @@
     </div>
   </div>
 </div>
+
+  <app-liste-filtre #modal></app-liste-filtre>
+

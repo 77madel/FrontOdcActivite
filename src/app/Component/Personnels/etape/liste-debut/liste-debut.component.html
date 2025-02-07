@@ -6,15 +6,20 @@
         Liste Debut pour Etape {{nomEtape}}
       </div>
     </div>
+
+    <button (click)="retour()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">
+      Retour
+    </button>
+
   </div>
 
   <div class="flex justify-end gap-4 mb-4">
-    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
-      Exporter en Excel
+    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">
+      <i class="fa-solid fa-file-excel"></i>
     </button>
-    <!-- <button (click)="exportPDF()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-      Exporter en PDF
-    </button> -->
+    <button (click)="exportPDF()" class="bg-black hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
+      <i class="fa-solid fa-file-pdf"></i>
+    </button>
   </div>
 
   <!-- Table (affichée uniquement si isTableVisible est vrai) -->

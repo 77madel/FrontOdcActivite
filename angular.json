@@ -28,9 +28,9 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css"],
+            "scripts": [
             ],
-            "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -60,12 +60,11 @@
               "outputHashing": "all",
               "optimization": true,
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "extractLicenses": true
+//              "vendorChunk": false,
+   //           "buildOptimizer": true
             },
             "development": {
               "optimization": false,

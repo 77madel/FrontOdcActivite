@@ -14,6 +14,7 @@ import {
 } from "ng-apexcharts";
 import { GlobalCrudService } from '../../core';
 import { MatIcon } from "@angular/material/icon";
+import { options } from '@fullcalendar/core/preact.js';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -107,7 +108,7 @@ export class MainComponent implements OnInit {
       plotOptions: { bar: { horizontal: false, columnWidth: "55%" } },
       dataLabels: { enabled: false },
       stroke: { show: true, width: 2, colors: ["transparent"] },
-      xaxis: { categories: ["Genre"] },
+      xaxis: { categories: ["Genre"],  },
       yaxis: { title: { text: "Count" } },
       fill: { opacity: 1 },
       tooltip: { y: { formatter: (val: number) => `${val} participants` } }
@@ -124,4 +125,6 @@ export class MainComponent implements OnInit {
       error: (err) => console.error("Erreur lors de la récupération des données de genre :", err),
     });
   }
+
+
 }

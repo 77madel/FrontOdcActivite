@@ -1,0 +1,10 @@
+<div *ngIf="filteredListes && filteredListes.length > 0; else noData">
+  <div *ngFor="let liste of filteredListes">
+    <p>ID: {{ liste.id }} - Date et Heure: {{ liste.dateHeure }}</p>
+    <p>Etape: {{ liste.etape.nom }}</p>
+  </div>
+</div>
+
+<ng-template #noData>
+  <p>Aucune donnée à afficher pour le moment ou selon le filtre sélectionné.</p>
+</ng-template>

@@ -140,12 +140,27 @@ export class TypeActiciteComponent implements OnInit {
           });
           this.resetForm();
         },
-        error: (err) => {
-          console.error(err);
+        error: (err: { status: number; error: any; message?: string }) => {
+          console.error('Erreur reçue:', err);
+
+          let message = 'Une erreur est survenue. Veuillez réessayer.'; // Message par défaut
+          let title = '<span class="text-red-500">Échec</span>';
+
+          // Extraire le message d'erreur selon la structure réelle
+          if (err.error?.message) {
+            message = err.error.message; // Message spécifique du backend
+          } else if (err.message) {
+            message = err.message; // Message générique d'erreur
+          } else {
+            // Utiliser un message générique si aucune info spécifique n'est disponible
+            message = 'Erreur inconnue. Veuillez réessayer.';
+          }
+
+          // Afficher l'alerte
           Swal.fire({
             icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
+            title: title,
+            text: message, // Afficher uniquement le message
             confirmButtonText: 'Ok',
             customClass: {
               confirmButton: 'bg-red-500 text-white hover:bg-red-600',
@@ -176,11 +191,27 @@ export class TypeActiciteComponent implements OnInit {
           });
           this.resetForm();
         },
-        error: (err) => {
+        error: (err: { status: number; error: any; message?: string }) => {
+          console.error('Erreur reçue:', err);
+
+          let message = 'Une erreur est survenue. Veuillez réessayer.'; // Message par défaut
+          let title = '<span class="text-red-500">Échec</span>';
+
+          // Extraire le message d'erreur selon la structure réelle
+          if (err.error?.message) {
+            message = err.error.message; // Message spécifique du backend
+          } else if (err.message) {
+            message = err.message; // Message générique d'erreur
+          } else {
+            // Utiliser un message générique si aucune info spécifique n'est disponible
+            message = 'Erreur inconnue. Veuillez réessayer.';
+          }
+
+          // Afficher l'alerte
           Swal.fire({
             icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
+            title: title,
+            text: message, // Afficher uniquement le message
             confirmButtonText: 'Ok',
             customClass: {
               confirmButton: 'bg-red-500 text-white hover:bg-red-600',
@@ -213,11 +244,27 @@ export class TypeActiciteComponent implements OnInit {
           });
           this.getAllType();
         },
-        error: (err: any) => {
+        error: (err: { status: number; error: any; message?: string }) => {
+          console.error('Erreur reçue:', err);
+
+          let message = 'Une erreur est survenue. Veuillez réessayer.'; // Message par défaut
+          let title = '<span class="text-red-500">Échec</span>';
+
+          // Extraire le message d'erreur selon la structure réelle
+          if (err.error?.message) {
+            message = err.error.message; // Message spécifique du backend
+          } else if (err.message) {
+            message = err.message; // Message générique d'erreur
+          } else {
+            // Utiliser un message générique si aucune info spécifique n'est disponible
+            message = 'Erreur inconnue. Veuillez réessayer.';
+          }
+
+          // Afficher l'alerte
           Swal.fire({
             icon: 'error',
-            title: '<span class="text-red-500">Échec</span>',
-            text: 'Une erreur est survenue. Veuillez réessayer.',
+            title: title,
+            text: message, // Afficher uniquement le message
             confirmButtonText: 'Ok',
             customClass: {
               confirmButton: 'bg-red-500 text-white hover:bg-red-600',

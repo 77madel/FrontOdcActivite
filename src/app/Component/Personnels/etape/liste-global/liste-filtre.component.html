@@ -1,0 +1,16 @@
+<!--<button (click)="openModal()">Ouvrir Modal</button>-->
+
+<div *ngIf="isOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+    <h2 class="text-xl font-bold mb-4">Les listes</h2>
+    <p class="text-gray-600 flex justify-center">
+      <button (click)="filterByDebut()" class="bg-orange-500 text-white px-4 py-2 rounded">Liste Début</button>
+      <button (click)="filterByResultat()" class="bg-black ml-5 text-white px-4 py-2 rounded">Liste Résultat</button>
+    </p>
+    <div class="mt-4 flex justify-end">
+<!--      <button (click)="resetFilter()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Réinitialiser</button>-->
+      <button (click)="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">Fermer</button>
+    </div>
+  </div>
+</div>
+

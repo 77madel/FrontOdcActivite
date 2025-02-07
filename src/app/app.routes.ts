@@ -76,6 +76,7 @@ export const routes: Routes = [
     loadComponent: () => import('./Component/Personnels/activity/activity.component').then(c => c.ActivityComponent),
     canActivate: [AuthGuardService]
   },
+
   {
     path: 'ajout-activite',
     loadComponent: () => import('./Component/Personnels/activity/ajout-activite/ajout-activite.component').then(c => AjoutActiviteComponent),
@@ -129,6 +130,31 @@ export const routes: Routes = [
   {
     path: 'activiteTotal',
     loadComponent: () => import('./Component/Personnels/activity/activite-total/activite-total.component').then(c => c.ActiviteTotalComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'salle',
+    loadComponent: () => import('./Component/Personnels/salle/salle.component').then(c => c.SalleComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'ajout-salle',
+    loadComponent: () => import('./Component/Personnels/salle/add-salle/add-salle.component').then(c => c.AddSalleComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'modifier-salle/:id',
+    loadComponent: () => import('./Component/Personnels/salle/update-salle/update-salle.component').then(c => c.UpdateSalleComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'listeGlobal',
+    loadComponent: () => import('./Component/Personnels/etape/liste-global/liste-filtre.component').then(c => c.ListeFiltreComponent),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'listeGlobale',
+    loadComponent: () => import('./Component/Personnels/etape/listeAffichage/liste-affichage.component').then(c => c.ListeAffichageComponent),
     canActivate: [AuthGuardService]
   },
   {

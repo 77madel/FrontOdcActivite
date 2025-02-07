@@ -1,0 +1,70 @@
+<div class="p-12 space-y-6">
+  <!-- Section des boutons -->
+  <div class="flex items-center gap-6 text-2xl mb-2 font-bold tracking-normal text-white">
+    <div class="flex flex-col grow items-start bg-orange-400 rounded-3xl w-fit">
+      <div class="px-5 pb-0 bg-black rounded-3xl">
+        Nos Salles
+      </div>
+    </div>
+    <!--        *ngIf="userRoles.includes('PERSONNEL')"-->
+    <div class="mt-3 flex-grow flex justify-end">
+      <button
+        (click)="naviguerVersFormulaire()"
+        class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition duration-150 ease-in-out"
+      >
+        Ajouter
+      </button>
+    </div>
+  </div>
+
+  <!-- Barre de recherche -->
+  <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Rechercher..."
+         class="w-full p-3 border border-orange-500 rounded-lg focus:ring-2 focus:ring-orange-500 mb-4" />
+
+  <!-- Table d'activités -->
+  <div  class="bg-white shadow-lg rounded-lg p-3">
+    <table class="w-full text-left">
+      <thead>
+      <tr class="bg-gray-100  text-gray-600 uppercase text-sm">
+        <th class="p-3">Nom</th>
+        <th class="p-3">Capacité</th>
+        <th class="p-3">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+      <tr *ngFor="let element of salles" class="hover:bg-gray-100">
+        <td class="p-3">{{ element.nom }}</td>
+        <td class="p-3">{{ element.capacite }}</td>
+
+        <!--        *ngIf="userRoles.includes('PERSONNEL')"-->
+        <td  class="p-3 flex gap-2">
+          <button (click)="updateSalle(element.id)" class="text-bg-dark hover:text-orange-500">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button (click)="supprimerSalle(element)" class="text-red-500 hover:text-red-700">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+
+      </tr>
+      <tr *ngIf="!salles || salles.length === 0">
+        <td colspan="7" class="p-3 text-center text-gray-500">Aucune activité disponible pour le moment.</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6 space-x-2">
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="px-3 py-2 text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>

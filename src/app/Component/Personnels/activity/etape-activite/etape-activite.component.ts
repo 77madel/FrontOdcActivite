@@ -23,7 +23,7 @@ export class EtapeActiviteComponent {
 
   updateSelectedEtapes() {
     const selectedEtapes = this.etape.filter(option => option.selected);
-    this.activiteToLink.etape = selectedEtapes.map(etape => ({
+    this.activiteToLink.etapes = selectedEtapes.map(etape => ({
       id: etape.id,
       nom: etape.nom
     }));

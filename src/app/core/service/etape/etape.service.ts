@@ -55,8 +55,8 @@ export class EtapeService {
   //   return this.etape.find((etape: any) => etape.id === id);
   // }
 
-  getEtapeByIdFromApi(id: number): Observable<any> {
-    return this.http.get<any>(`${this.BASE_URL}/etape/liste/${id}`);
+  getEtapeByIdFromApi(encryptedId: number): Observable<any> {
+    return this.http.get<any>(`${this.BASE_URL}/etape/liste/${encryptedId}`);
   }
 
 

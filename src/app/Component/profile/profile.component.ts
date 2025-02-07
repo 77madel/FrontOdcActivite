@@ -5,6 +5,7 @@ import {LoginServiceService, PersonnelService, Utilisateur} from '../../core';
 import {Router} from '@angular/router';
 import {UtilisateurService} from '../../core/service/auth/utilisateur.service';
 import Swal from 'sweetalert2';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',

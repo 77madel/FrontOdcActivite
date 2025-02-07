@@ -64,7 +64,7 @@ export class ActiviteTotalComponent implements AfterViewInit {
         case 'En_Attente':
           color = 'blue'; // Bleu
           break;
-        case 'Terminé':
+        case 'Termine':
           color = 'red'; // Rouge
           break;
         default:
