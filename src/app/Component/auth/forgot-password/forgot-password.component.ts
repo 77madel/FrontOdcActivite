@@ -1,10 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {NgIf} from '@angular/common';
 import {LoginServiceService} from '../../../core';
@@ -13,14 +9,8 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-forgot-password',
     imports: [
-        MatButton,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatSuffix,
         RouterLink,
         ReactiveFormsModule,
-        MatIcon,
         FormsModule,
         NgIf
     ],

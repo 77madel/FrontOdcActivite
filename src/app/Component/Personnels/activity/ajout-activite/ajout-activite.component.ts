@@ -10,7 +10,7 @@ import {
 } from '../../../../core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
 import {Salle} from '../../../../core/model/Salle';
@@ -20,7 +20,6 @@ import {Salle} from '../../../../core/model/Salle';
     imports: [
         FormsModule,
         NgForOf,
-        NgIf,
         ReactiveFormsModule
     ],
     templateUrl: './ajout-activite.component.html',

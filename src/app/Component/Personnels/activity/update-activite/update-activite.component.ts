@@ -14,7 +14,7 @@ import {Salle} from '../../../../core/model/Salle';
         FormsModule,
         ReactiveFormsModule,
         NgForOf,
-        NgIf
+
     ],
     templateUrl: './update-activite.component.html',
     styleUrls: ['./update-activite.component.css']

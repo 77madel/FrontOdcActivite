@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, NgIf],
+    imports: [RouterLink],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })

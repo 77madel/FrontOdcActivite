@@ -1,10 +1,107 @@
-<div *ngIf="filteredListes && filteredListes.length > 0; else noData">
-  <div *ngFor="let liste of filteredListes">
-    <p>ID: {{ liste.id }} - Date et Heure: {{ liste.dateHeure }}</p>
-    <p>Etape: {{ liste.etape.nom }}</p>
+<div class="p-12">
+  <!-- Section des boutons -->
+  <div class="flex items-center gap-6 text-2xl mb-6 font-bold tracking-normal text-white">
+    <div class="flex flex-col grow items-start bg-orange-400 rounded-3xl w-fit">
+      <div class="px-5 pb-0 bg-black rounded-3xl">
+       Liste
+      </div>
+    </div>
+    <button (click)="retour()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">
+      Retour
+    </button>
+  </div>
+
+
+<!--    (click)="exportExcel()"-->
+<!--    (click)="exportPDF()"-->
+
+  <!-- Table (affichée uniquement si isTableVisible est vrai) -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border-collapse">
+        <!-- Table header -->
+        <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Etape</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Date & heure</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+        </thead>
+
+        <!-- Table body -->
+        <tbody *ngIf="filteredListes && filteredListes.length > 0; else noData"  class="bg-white">
+        <tr *ngFor="let liste of filteredListes">
+          <td class="px-6 py-4 text-sm text-gray-900">{{ liste.etape.nom }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">
+            {{ liste.dateHeure | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          <td class="px-6 py-4 text-sm  text-gray-900">
+            <button (click)="supprimerListe(liste)" class="text-red-500 hover:text-red-700">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+
+            <button *ngIf="liste.listeDebut"
+                    [routerLink]="['/liste-debut', liste.id]"
+                    class="text-orange-500 ml-3 hover:text-orange-500"
+                    aria-label="Show List">
+              <i class="fas fa-eye"></i>
+              Voir liste
+            </button>
+            <button *ngIf="liste.listeResultat"
+                    [routerLink]="['/liste-resultat', liste.id]"
+                    class="text-black-500 ml-3 hover:text-black-600"
+                    aria-label="Show List">
+              <i class="fas fa-eye"></i>
+              Voir liste
+            </button>
+          </td>
+
+        </tr>
+        </tbody>
+
+        <ng-template #noData>
+          <p>Aucune donnée à afficher pour le moment ou selon le filtre sélectionné.</p>
+        </ng-template>
+
+      </table>
+
+      <!--      &lt;!&ndash; Message si aucune donnée n'est disponible &ndash;&gt;-->
+      <!--      <div *ngIf="listeDebut && listeDebut.length === 0" class="text-center mt-4 text-gray-500">-->
+      <!--        <p>Aucune donnée disponible pour le moment.</p>-->
+      <!--      </div>-->
+    </div>
+
+    <!-- Pagination -->
+    <!--    <div class="flex justify-center mt-4">-->
+    <!--      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">-->
+    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
+    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />-->
+    <!--        </svg>-->
+    <!--      </button>-->
+    <!--      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>-->
+    <!--      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">-->
+    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
+    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />-->
+    <!--        </svg>-->
+    <!--      </button>-->
+    <!--    </div>-->
   </div>
 </div>
 
-<ng-template #noData>
-  <p>Aucune donnée à afficher pour le moment ou selon le filtre sélectionné.</p>
-</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,10 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
-import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import {HttpClient} from '@angular/common/http';
 import {NgIf} from '@angular/common';
 import {LoginServiceService} from '../../../core';
@@ -13,15 +9,9 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-set-new-password',
     imports: [
-        MatIcon,
         RouterLink,
         FormsModule,
-        MatButton,
-        MatFormField,
-        MatInput,
-        MatLabel,
         ReactiveFormsModule,
-        MatHint,
         NgIf
     ],
     templateUrl: './set-new-password.component.html',

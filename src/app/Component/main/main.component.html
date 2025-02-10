@@ -47,12 +47,11 @@
     <div class="text-gray-500 text-sm font-semibold">Nombre personne par genre</div>
     <div class="mt-12">
       <!-- Replace with actual chart/graph -->
-      <div id="chart">
+      <div id="chart" *ngIf="chartOptions && chartOptions.series && chartOptions.series.length > 0 && chartOptions.chart && chartOptions.dataLabels && chartOptions.xaxis">
         <apx-chart
           [series]="chartOptions.series"
           [chart]="chartOptions.chart"
-          [title]="chartOptions.dataLabels"
-          [xaxis]="chartOptions.xaxis">
+          [title]="chartOptions.dataLabels"  [xaxis]="chartOptions.xaxis">
         </apx-chart>
       </div>
     </div>

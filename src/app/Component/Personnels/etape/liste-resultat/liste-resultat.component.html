@@ -12,11 +12,13 @@
   </div>
 
   <div class="flex justify-end gap-4 mb-4">
-    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">
+    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
       <i class="fa-solid fa-file-excel"></i>
+      Excel
     </button>
-    <button (click)="exportPDF()" class="bg-black hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
+    <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
       <i class="fa-solid fa-file-pdf"></i>
+      Pdf
     </button>
   </div>
 
@@ -32,19 +34,24 @@
           <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
           <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Genre</th>
           <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Phone</th>
-          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Activite</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Liste Noir</th>
         </tr>
         </thead>
 
         <!-- Table body -->
-        <tbody class="bg-white">
+        <tbody *ngIf="listeResultat && listeResultat.length > 0" class="bg-white">
         <tr *ngFor="let element of listeResultat">
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.nom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.prenom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.email }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.genre }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.phone }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ element.activite.nom }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">
+            <button (click)="addToBlacklist(element)">
+              <i class="fa fa-ban"></i>
+              Bloqué
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>

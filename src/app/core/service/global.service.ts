@@ -24,7 +24,7 @@ export class GlobalCrudService {
   }
 
   getId(name: string, id:number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${name}/get/${id}`);
+    return this.http.get(`${this.baseUrl}/${name}/${id}`);
   }
 
   getById(name: string, id: string): Observable<any> {
