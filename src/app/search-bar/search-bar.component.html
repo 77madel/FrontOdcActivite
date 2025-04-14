@@ -1,0 +1,28 @@
+<div class="w-full max-w-md">
+  <div class="relative flex items-center">
+    <!-- Icône de recherche -->
+    <div class="absolute left-3 text-gray-400">
+      <i class="fa-solid fa-search"></i>
+    </div>
+
+    <!-- Champ de recherche -->
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+      [placeholder]="placeholder"
+      class="w-full py-2 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+    />
+
+    <!-- Bouton pour effacer -->
+    <button
+      *ngIf="searchTerm"
+      (click)="onClear()"
+      class="absolute right-3 text-gray-400 hover:text-orange-500 focus:outline-none"
+      aria-label="Effacer la recherche"
+    >
+      <i class="fa-solid fa-times"></i>
+    </button>
+  </div>
+</div>
+

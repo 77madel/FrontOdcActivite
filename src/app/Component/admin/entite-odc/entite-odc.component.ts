@@ -131,16 +131,36 @@ export class EntiteODCComponent implements OnInit {
     });
   }
 
+  // getAllUtilisateur() {
+  //   this.globalService.get("utilisateur").subscribe({
+  //     next: (value) => {
+  //       this.utilisateur = value;
+  //       console.log("Réponse brute de l'API :",  this.utilisateur );
+  //       // Vérifiez que la réponse est un tableau
+  //       if (Array.isArray(value)) {
+  //         // Filtrer les utilisateurs ayant le rôle "Personnel"
+  //         this.utilisateursPersonnels = value.filter(user => user.role.nom === 'PERSONNEL');
+  //         console.log("Utilisateurs avec le rôle 'Personnel':", this.utilisateursPersonnels);
+  //       } else {
+  //         console.error("La réponse n'est pas un tableau :", value);
+  //       }
+  //     },
+  //     error: (err: any) => {
+  //       console.error("Erreur lors de la récupération des utilisateurs :", err);
+  //     }
+  //   });
+  // }
+
   getAllUtilisateur() {
     this.globalService.get("utilisateur").subscribe({
       next: (value) => {
         this.utilisateur = value;
-        console.log("Réponse brute de l'API :",  this.utilisateur );
-        // Vérifiez que la réponse est un tableau
+        console.log("Réponse brute de l'API :", this.utilisateur);
+
         if (Array.isArray(value)) {
-          // Filtrer les utilisateurs ayant le rôle "Personnel"
-          this.utilisateursPersonnels = value.filter(user => user.role.nom === 'PERSONNEL');
-          console.log("Utilisateurs avec le rôle 'Personnel':", this.utilisateursPersonnels);
+          // Ne pas filtrer — garder tous les utilisateurs
+          this.utilisateursPersonnels = value;
+          console.log("Tous les utilisateurs :", this.utilisateursPersonnels);
         } else {
           console.error("La réponse n'est pas un tableau :", value);
         }
@@ -150,6 +170,7 @@ export class EntiteODCComponent implements OnInit {
       }
     });
   }
+
 
 
 

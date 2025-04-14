@@ -93,9 +93,9 @@
         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
           Activité
         </th>
-        <th *ngIf="userRoles.includes('PERSONNEL')" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-          Check-in
-        </th>
+<!--        <th *ngIf="userRoles.includes('PERSONNEL')" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">-->
+<!--          Check-in-->
+<!--        </th>-->
       </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
@@ -122,15 +122,15 @@
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
           {{ participant.activite?.nom }}
         </td>
-        <td *ngIf="userRoles.includes('PERSONNEL')" class="px-6 py-4 whitespace-nowrap text-center">
-          <input
-            type="checkbox"
-            (change)="onCheckInChange(participant, $event)"
-            [checked]="participant.checkedIn"
-            [disabled]="participant.checkedIn"
-            class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-          />
-        </td>
+<!--        <td *ngIf="userRoles.includes('PERSONNEL')" class="px-6 py-4 whitespace-nowrap text-center">-->
+<!--          <input-->
+<!--            type="checkbox"-->
+<!--            (change)="onCheckInChange(participant, $event)"-->
+<!--            [checked]="participant.checkedIn"-->
+<!--            [disabled]="participant.checkedIn"-->
+<!--            class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"-->
+<!--          />-->
+<!--        </td>-->
       </tr>
       </tbody>
     </table>

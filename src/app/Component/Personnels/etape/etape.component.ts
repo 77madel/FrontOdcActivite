@@ -50,7 +50,6 @@ interface EtapeDTO {
         MatOptionModule,
         ReactiveFormsModule,
         FormsModule,
-        RouterLink,
         ListeFiltreComponent
     ],
     templateUrl: './etape.component.html',

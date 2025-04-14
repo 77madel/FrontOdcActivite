@@ -6,20 +6,36 @@
         Liste Resultat pour Etape {{nomEtape}}
       </div>
     </div>
+
     <button (click)="retour()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">
       Retour
     </button>
+
   </div>
 
-  <div class="flex justify-end gap-4 mb-4">
-    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
-      <i class="fa-solid fa-file-excel"></i>
-      Excel
-    </button>
-    <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
-      <i class="fa-solid fa-file-pdf"></i>
-      Pdf
-    </button>
+  <div class="flex justify-between items-center gap-4 mb-4">
+    <!-- Search input -->
+    <div class="flex items-center">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+        placeholder="Rechercher..."
+        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      />
+    </div>
+
+    <!-- Export buttons -->
+    <div class="flex gap-4">
+      <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
+        <i class="fa-solid fa-file-excel"></i>
+        Excel
+      </button>
+      <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
+        <i class="fa-solid fa-file-pdf"></i>
+        Pdf
+      </button>
+    </div>
   </div>
 
   <!-- Table (affichée uniquement si isTableVisible est vrai) -->
@@ -39,8 +55,8 @@
         </thead>
 
         <!-- Table body -->
-        <tbody *ngIf="listeResultat && listeResultat.length > 0" class="bg-white">
-        <tr *ngFor="let element of listeResultat">
+        <tbody *ngIf="paginatedItems && paginatedItems.length > 0" class="bg-white">
+        <tr *ngFor="let element of paginatedItems">
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.nom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.prenom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.email }}</td>
@@ -56,25 +72,33 @@
         </tbody>
       </table>
 
-      <!--      &lt;!&ndash; Message si aucune donnée n'est disponible &ndash;&gt;-->
-      <!--      <div *ngIf="listeDebut && listeDebut.length === 0" class="text-center mt-4 text-gray-500">-->
-      <!--        <p>Aucune donnée disponible pour le moment.</p>-->
-      <!--      </div>-->
+      <!-- Message si aucune donnée n'est disponible -->
+      <div *ngIf="paginatedItems && paginatedItems.length === 0" class="text-center py-4 text-gray-500">
+        <p>Aucune donnée disponible pour le moment.</p>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <!--    <div class="flex justify-center mt-4">-->
-    <!--      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">-->
-    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
-    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />-->
-    <!--        </svg>-->
-    <!--      </button>-->
-    <!--      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>-->
-    <!--      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">-->
-    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
-    <!--          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />-->
-    <!--        </svg>-->
-    <!--      </button>-->
-    <!--    </div>-->
+    <div class="flex justify-center items-center py-4 bg-gray-50 border-t border-gray-200">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
   </div>
 </div>

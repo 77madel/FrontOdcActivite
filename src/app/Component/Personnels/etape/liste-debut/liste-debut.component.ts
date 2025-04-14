@@ -1,120 +1,198 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EtapeService, GlobalCrudService} from '../../../../core';
+import {EtapeService, GlobalCrudService, Participant, ParticipantService} from '../../../../core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../../../../core/interface/Person';
 import { exportToExcel } from '../../../utils/export-utils';
 import autoTable, { RowInput } from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import Swal from 'sweetalert2';
+import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: 'app-liste-debut',
-    imports: [
-        CommonModule
-    ],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
     templateUrl: './liste-debut.component.html',
     styleUrl: './liste-debut.component.css'
 })
 export class ListeDebutComponent implements OnInit {
-  [x: string]: any;
+  [x: string]: any
 
-  ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('ID reçu:', id);
+  listeDebut: Person[] = []
+  filteredListeDebut: Person[] = [] // For search functionality
+  nomEtape = ""
 
-    this.afficherParticipantsDepuisListe(id);
-  }
+  // Pagination properties
+  currentPage = 1
+  pageSize = 10
+  totalPages = 1
 
-  afficherParticipantsDepuisListe(idListe: number) {
-    this.globaleService.getId("liste", idListe).subscribe(
-      (liste: any) => { // Typage à adapter selon ton modèle
-        console.log("Données reçues de la table liste:", liste);
-
-        if (liste) {
-          // Vérifier si `listeDebut` est vrai
-          if (liste.listeDebut === true) {
-            // Récupérer les participants directement depuis `listeDebut` de l'entité `etape`
-            if (liste.etape && liste.etape.listeDebut && liste.etape.listeDebut.length > 0) {
-              this.listeDebut = liste.etape.listeDebut; // Récupérer la liste début depuis l'étape
-              console.log("Participants trouvés:", this.listeDebut);
-
-              // Récupérer le nom de l'étape
-              this.nomEtape = liste.etape?.nom ?? ''; // Si l'étape existe, récupérer son nom
-              console.log("Nom de l'étape:", this.nomEtape);
-            } else {
-              console.warn("Aucun participant trouvé pour cette étape.");
-              this.listeDebut = [];
-            }
-          } else {
-            console.warn("Liste non marquée comme listeDebut.");
-            this.listeDebut = []; // Si listeDebut est faux, on initialise listeDebut comme tableau vide
-          }
-        } else {
-          console.warn("Aucune donnée trouvée pour cette liste.");
-          this.listeDebut = [];
-          this.nomEtape = '';
-        }
-      },
-      (error) => {
-        console.error("Erreur lors de la récupération des données:", error);
-        this.listeDebut = [];
-        this.nomEtape = '';
-      }
-    );
-  }
-
-
-
-
-  listeDebut: Person[] = [];
-  nomEtape: string = '';
+  // Search property
+  searchTerm = ""
 
   constructor(
     private route: ActivatedRoute,
     private etapeService: EtapeService,
-    private router:Router,
+    private router: Router,
     private globaleService: GlobalCrudService,
+    private readonly participantService: ParticipantService,
   ) {}
 
-  retour(): void {
-    this.router.navigate(['/listeGlobale'], {
-      queryParams: { filter: 'debut' },
-      queryParamsHandling: 'merge',  // Conserver les autres paramètres existants
-    });
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get("id"))
+    console.log("ID reçu:", id)
+
+    this.afficherParticipantsDepuisListe(id)
+    // this.fetchParticipants();
   }
 
+  afficherParticipantsDepuisListe(idListe: number) {
+    this.globaleService.getId("liste", idListe).subscribe(
+      (liste: any) => {
+        console.log("Données reçues de la table liste:", liste)
+
+        if (liste) {
+          if (liste.listeDebut === true) {
+            if (liste.etape && liste.etape.listeDebut && liste.etape.listeDebut.length > 0) {
+              // Récupérer les identifiants des participants
+              const participantIds = liste.etape.listeDebut.map((participant: any) => participant.id)
+
+              // Récupérer les participants depuis le service participantService
+              this.participantService.get().then(
+                (participants: any[]) => {
+                  // Filtrer les participants en fonction des identifiants récupérés
+                  this.listeDebut = participants.filter((participant: any) => participantIds.includes(participant.id))
+                  console.log("Participants trouvés:", this.listeDebut)
+
+                  // Initialize filtered list and pagination
+                  this.filteredListeDebut = [...this.listeDebut]
+                  this.updatePagination()
+
+                  // Récupérer le nom de l'étape
+                  this.nomEtape = liste.etape?.nom ?? ""
+                  console.log("Nom de l'étape:", this.nomEtape)
+                },
+                (error: any) => {
+                  console.error("Erreur lors de la récupération des participants:", error)
+                  this.listeDebut = []
+                  this.filteredListeDebut = []
+                },
+              )
+            } else {
+              console.warn("Aucun participant trouvé pour cette étape.")
+              this.listeDebut = []
+              this.filteredListeDebut = []
+            }
+          } else {
+            console.warn("Liste non marquée comme listeDebut.")
+            this.listeDebut = []
+            this.filteredListeDebut = []
+          }
+        } else {
+          console.warn("Aucune donnée trouvée pour cette liste.")
+          this.listeDebut = []
+          this.filteredListeDebut = []
+          this.nomEtape = ""
+        }
+      },
+      (error) => {
+        console.error("Erreur lors de la récupération des données:", error)
+        this.listeDebut = []
+        this.filteredListeDebut = []
+        this.nomEtape = ""
+      },
+    )
+  }
+
+  // Pagination methods
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredListeDebut.length / this.pageSize)
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages || 1
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++
+    }
+  }
+
+  // Search method
+  search(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredListeDebut = [...this.listeDebut]
+    } else {
+      const term = this.searchTerm.toLowerCase().trim()
+      this.filteredListeDebut = this.listeDebut.filter(
+        (person) =>
+          person.nom?.toLowerCase().includes(term) ||
+          person.prenom?.toLowerCase().includes(term) ||
+          person.email?.toLowerCase().includes(term) ||
+          person.genre?.toLowerCase().includes(term) ||
+          person.phone?.toLowerCase().includes(term),
+      )
+    }
+    this.currentPage = 1
+    this.updatePagination()
+  }
+
+  // Get current page items
+  get paginatedItems(): Person[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize
+    return this.filteredListeDebut.slice(startIndex, startIndex + this.pageSize)
+  }
+
+  retour(): void {
+    this.router.navigate(["/listeGlobale"], {
+      queryParams: { filter: "debut" },
+      queryParamsHandling: "merge", // Conserver les autres paramètres existants
+    })
+  }
 
   exportExcel(): void {
-    exportToExcel(this.listeDebut.map(item => ({
-      Nom: item.nom,
-      Prenom: item.prenom,
-      Email: item.email,
-      Genre: item.genre,
-      Téléphone: item.phone,
-      Activité: item.activite.nom,
-    })), 'Liste_Debut');
+    exportToExcel(
+      this.listeDebut.map((item) => ({
+        Nom: item.nom,
+        Prenom: item.prenom,
+        Email: item.email,
+        Genre: item.genre,
+        Téléphone: item.phone,
+        Activité: item.activite.nom,
+      })),
+      "Liste_Debut",
+    )
   }
 
   exportPDF(): void {
-    const doc = new jsPDF();
+    const doc = new jsPDF()
 
     // Titre du document
-    const title = 'Liste debut des Participants';
-    doc.setFontSize(16);
-    doc.text(title, 14, 15);
+    const title = "Liste debut des Participants"
+    doc.setFontSize(16)
+    doc.text(title, 14, 15)
 
     // Préparer les données pour le tableau (convertir undefined en chaînes vides)
-    const tableData = this.listeDebut.map(item => [
-      item.nom || '',
-      item.prenom || '',
-      item.email || '',
-      item.genre || '',
-      item.phone || '',
-    ]);
+    const tableData = this.listeDebut.map((item) => [
+      item.nom || "",
+      item.prenom || "",
+      item.email || "",
+      item.genre || "",
+      item.phone || "",
+      item.activite?.nom || "",
+    ])
 
     // Préparer les en-têtes
-    const tableHeaders = ['Nom', 'Prénom', 'Email', 'Genre', 'Téléphone'];
+    const tableHeaders = ["Nom", "Prénom", "Email", "Genre", "Téléphone", "Activite"]
 
     // Ajouter le tableau au PDF
     autoTable(doc, {
@@ -127,27 +205,27 @@ export class ListeDebutComponent implements OnInit {
         // fontSize: 10, // Taille de la police
         // fontStyle: 'bold' // Style de police (gras ici)
       },
-    });
+    })
 
     // Télécharger le PDF
-    doc.save('Liste_Debut_Participants.pdf');
+    doc.save("Liste_Debut_Participants.pdf")
   }
 
   // Fonction pour ajouter à la blacklist
   addToBlacklist(participant: any): void {
     // Appeler l'API pour ajouter à la blacklist
-    this.globaleService.post('blacklist', participant).subscribe({
+    this.globaleService.post("blacklist", participant).subscribe({
       next: (data) => {
-        console.log('Participant ajouté à la blacklist:', data);
+        console.log("Participant ajouté à la blacklist:", data)
         // this.getAllBlacklist();  // Recharger la liste des blacklists
         // Afficher un message de succès
-        this.showSuccessToast();
+        this.showSuccessToast()
       },
       error: (err) => {
-        console.error('Erreur lors de l\'ajout à la blacklist:', err);
-        this.showErrorToast(err);  // Afficher un message d'erreur
-      }
-    });
+        console.error("Erreur lors de l'ajout à la blacklist:", err)
+        this.showErrorToast(err) // Afficher un message d'erreur
+      },
+    })
   }
 
   // Fonction pour afficher le toast de succès
@@ -159,34 +237,33 @@ export class ListeDebutComponent implements OnInit {
       timer: 3000,
       timerProgressBar: true,
       didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
+        toast.onmouseenter = Swal.stopTimer
+        toast.onmouseleave = Swal.resumeTimer
+      },
+    })
     Toast.fire({
       icon: "success",
-      title: "Adjonction réalisée avec un succès éclatant."
-    });
+      title: "Adjonction réalisée avec un succès éclatant.",
+    })
   }
 
   // Fonction pour afficher un message d'erreur
   showErrorToast(err: any): void {
-    let message = 'Une erreur est survenue. Veuillez réessayer.';
+    let message = "Une erreur est survenue. Veuillez réessayer."
     if (err.error?.message) {
-      message = err.error.message;
+      message = err.error.message
     } else if (err.message) {
-      message = err.message;
+      message = err.message
     }
 
     Swal.fire({
-      icon: 'error',
-      title: 'Échec',
+      icon: "error",
+      title: "Échec",
       text: message,
-      confirmButtonText: 'Ok',
+      confirmButtonText: "Ok",
       customClass: {
-        confirmButton: 'bg-red-500 text-white hover:bg-red-600',
+        confirmButton: "bg-red-500 text-white hover:bg-red-600",
       },
-    });
+    })
   }
-
 }

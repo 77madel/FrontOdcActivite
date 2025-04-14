@@ -1,3 +1,87 @@
+<!--<div class="p-12">-->
+<!--  &lt;!&ndash; Section des boutons &ndash;&gt;-->
+<!--  <div class="flex items-center gap-6 text-2xl mb-6 font-bold tracking-normal text-white">-->
+<!--    <div class="flex flex-col grow items-start bg-orange-400 rounded-3xl w-fit">-->
+<!--      <div class="px-5 pb-0 bg-black rounded-3xl">-->
+<!--        Liste Debut pour Etape {{nomEtape}}-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <button (click)="retour()" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded">-->
+<!--      Retour-->
+<!--    </button>-->
+
+<!--  </div>-->
+
+<!--  <div class="flex justify-end gap-4 mb-4">-->
+<!--    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">-->
+<!--      <i class="fa-solid fa-file-excel"></i>-->
+<!--      Excel-->
+<!--    </button>-->
+<!--    <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">-->
+<!--      <i class="fa-solid fa-file-pdf"></i>-->
+<!--      Pdf-->
+<!--    </button>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Table (affichée uniquement si isTableVisible est vrai) &ndash;&gt;-->
+<!--  <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg">-->
+<!--    <div class="overflow-x-auto">-->
+<!--      <table class="min-w-full bg-white border-collapse">-->
+<!--        &lt;!&ndash; Table header &ndash;&gt;-->
+<!--        <thead class="bg-gray-100">-->
+<!--        <tr>-->
+<!--&lt;!&ndash;          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Nom</th>&ndash;&gt;-->
+<!--          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Prenom</th>-->
+<!--          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Email</th>-->
+<!--          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Genre</th>-->
+<!--          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Phone</th>-->
+<!--          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">Liste Noir</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+
+<!--        &lt;!&ndash; Table body &ndash;&gt;-->
+<!--        <tbody *ngIf="listeDebut && listeDebut.length > 0" class="bg-white">-->
+<!--        <tr *ngFor="let element of listeDebut">-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">{{ element.nom }}</td>-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">{{ element.prenom }}</td>-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">{{ element.email }}</td>-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">{{ element.genre }}</td>-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">{{ element.phone }}</td>-->
+<!--          <td class="px-6 py-4 text-sm text-gray-900">-->
+<!--            <button (click)="addToBlacklist(element)">-->
+<!--              <i class="fa fa-ban"></i>-->
+<!--              Bloqué-->
+<!--            </button>-->
+<!--          </td>-->
+
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+
+<!--&lt;!&ndash;      &lt;!&ndash; Message si aucune donnée n'est disponible &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;      <div *ngIf="listeDebut && listeDebut.length === 0" class="text-center mt-4 text-gray-500">&ndash;&gt;-->
+<!--&lt;!&ndash;        <p>Aucune donnée disponible pour le moment.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Pagination &ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="flex justify-center mt-4">&ndash;&gt;-->
+<!--&lt;!&ndash;      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">&ndash;&gt;-->
+<!--&lt;!&ndash;        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">&ndash;&gt;-->
+<!--&lt;!&ndash;          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />&ndash;&gt;-->
+<!--&lt;!&ndash;        </svg>&ndash;&gt;-->
+<!--&lt;!&ndash;      </button>&ndash;&gt;-->
+<!--&lt;!&ndash;      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">&ndash;&gt;-->
+<!--&lt;!&ndash;        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">&ndash;&gt;-->
+<!--&lt;!&ndash;          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />&ndash;&gt;-->
+<!--&lt;!&ndash;        </svg>&ndash;&gt;-->
+<!--&lt;!&ndash;      </button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--  </div>-->
+<!--</div>-->
+
 <div class="p-12">
   <!-- Section des boutons -->
   <div class="flex items-center gap-6 text-2xl mb-6 font-bold tracking-normal text-white">
@@ -13,15 +97,29 @@
 
   </div>
 
-  <div class="flex justify-end gap-4 mb-4">
-    <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
-      <i class="fa-solid fa-file-excel"></i>
-      Excel
-    </button>
-    <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
-      <i class="fa-solid fa-file-pdf"></i>
-      Pdf
-    </button>
+  <div class="flex justify-between items-center gap-4 mb-4">
+    <!-- Search input -->
+    <div class="flex items-center">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+        placeholder="Rechercher..."
+        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      />
+    </div>
+
+    <!-- Export buttons -->
+    <div class="flex gap-4">
+      <button (click)="exportExcel()" class="bg-orange-500 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
+        <i class="fa-solid fa-file-excel"></i>
+        Excel
+      </button>
+      <button (click)="exportPDF()" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
+        <i class="fa-solid fa-file-pdf"></i>
+        Pdf
+      </button>
+    </div>
   </div>
 
   <!-- Table (affichée uniquement si isTableVisible est vrai) -->
@@ -41,8 +139,8 @@
         </thead>
 
         <!-- Table body -->
-        <tbody *ngIf="listeDebut && listeDebut.length > 0" class="bg-white">
-        <tr *ngFor="let element of listeDebut">
+        <tbody *ngIf="paginatedItems && paginatedItems.length > 0" class="bg-white">
+        <tr *ngFor="let element of paginatedItems">
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.nom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.prenom }}</td>
           <td class="px-6 py-4 text-sm text-gray-900">{{ element.email }}</td>
@@ -54,30 +152,38 @@
               Bloqué
             </button>
           </td>
-
         </tr>
         </tbody>
       </table>
 
-<!--      &lt;!&ndash; Message si aucune donnée n'est disponible &ndash;&gt;-->
-<!--      <div *ngIf="listeDebut && listeDebut.length === 0" class="text-center mt-4 text-gray-500">-->
-<!--        <p>Aucune donnée disponible pour le moment.</p>-->
-<!--      </div>-->
+      <!-- Message si aucune donnée n'est disponible -->
+      <div *ngIf="paginatedItems && paginatedItems.length === 0" class="text-center py-4 text-gray-500">
+        <p>Aucune donnée disponible pour le moment.</p>
+      </div>
     </div>
 
     <!-- Pagination -->
-<!--    <div class="flex justify-center mt-4">-->
-<!--      <button (click)="prevPage()" [disabled]="currentPage === 1" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2">-->
-<!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
-<!--          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />-->
-<!--        </svg>-->
-<!--      </button>-->
-<!--      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>-->
-<!--      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2">-->
-<!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">-->
-<!--          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />-->
-<!--        </svg>-->
-<!--      </button>-->
-<!--    </div>-->
+    <div class="flex justify-center items-center py-4 bg-gray-50 border-t border-gray-200">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      <span class="text-gray-700">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-1 px-3 rounded-lg ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
+
