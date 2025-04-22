@@ -6,7 +6,15 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatCardModule} from "@angular/material/card";
-import { Entite, EntiteOdcService, Utilisateur, Role, GlobalCrudService, RoleServiceService } from '../../../core';
+import {
+  Entite,
+  EntiteOdcService,
+  Utilisateur,
+  Role,
+  GlobalCrudService,
+  RoleServiceService,
+  TypeActivite
+} from '../../../core';
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import Swal from 'sweetalert2';
@@ -36,6 +44,8 @@ export class EntiteODCComponent implements OnInit {
   selectedUtilisateur: Utilisateur | null = null; // Déclaration de la variable pour stocker l'utilisateur sélectionné
   currentYear: number = new Date().getFullYear();
   utilisateursPersonnels: any[] = [];
+  allTypeActivite: TypeActivite[] = []; // Pour la liste déroulante des types d'activités
+  selectedTypeActivites: number[] = []; // Pour stocker les IDs des types d'activités sélectionnés
 
   isFormVisible: boolean = false;
   isTableVisible: boolean = true;
@@ -102,13 +112,10 @@ export class EntiteODCComponent implements OnInit {
 
   }
 
-  viewEntiteDetails(entite: any): void {
-    this.router.navigate(['/entite-detail', entite.id]);
-  }
-
   ngOnInit(): void {
     this.getAllEntite();
     this.getAllUtilisateur();
+    this.getAllTypeActivite();
   }
 
   getAllEntite(): void {
@@ -131,26 +138,6 @@ export class EntiteODCComponent implements OnInit {
     });
   }
 
-  // getAllUtilisateur() {
-  //   this.globalService.get("utilisateur").subscribe({
-  //     next: (value) => {
-  //       this.utilisateur = value;
-  //       console.log("Réponse brute de l'API :",  this.utilisateur );
-  //       // Vérifiez que la réponse est un tableau
-  //       if (Array.isArray(value)) {
-  //         // Filtrer les utilisateurs ayant le rôle "Personnel"
-  //         this.utilisateursPersonnels = value.filter(user => user.role.nom === 'PERSONNEL');
-  //         console.log("Utilisateurs avec le rôle 'Personnel':", this.utilisateursPersonnels);
-  //       } else {
-  //         console.error("La réponse n'est pas un tableau :", value);
-  //       }
-  //     },
-  //     error: (err: any) => {
-  //       console.error("Erreur lors de la récupération des utilisateurs :", err);
-  //     }
-  //   });
-  // }
-
   getAllUtilisateur() {
     this.globalService.get("utilisateur").subscribe({
       next: (value) => {
@@ -170,11 +157,6 @@ export class EntiteODCComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
 
 
   getNombreActivites(entiteId: number): void {
@@ -207,6 +189,11 @@ export class EntiteODCComponent implements OnInit {
     if (this.selectedFile) {
       formData.append('logo', this.selectedFile);
     }
+
+    // Ajoutez la liste des IDs des types d'activités sélectionnés
+    this.selectedTypeActivites.forEach(typeId => {
+      formData.append('typeActiviteIds', typeId.toString());
+    });
 
     // Vérifiez que l'utilisateur sélectionné est disponible et ajoutez son ID
     if (this.selectedUtilisateur && this.selectedUtilisateur.id) {
@@ -297,6 +284,21 @@ export class EntiteODCComponent implements OnInit {
         }
       });
     }
+  }
+
+  getAllTypeActivite(): void {
+    this.globalService.get("typeActivite").subscribe({
+      next: (data: TypeActivite[]) => {
+        this.allTypeActivite = data;
+      },
+      error: (err) => {
+        console.error("Erreur lors de la récupération des types d'activités", err);
+      }
+    });
+  }
+
+  viewEntiteDetails(entite: Entite): void {
+    this.router.navigate([`/entite/${entite.id}`]);
   }
 
 

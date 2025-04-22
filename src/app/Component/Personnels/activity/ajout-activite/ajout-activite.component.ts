@@ -29,7 +29,9 @@ export class AjoutActiviteComponent {
   activiteToAdd: Activity = new Activity();
   etape: Etape[] = [];
   entite: Entite[] = [];
-  typeActivite: TypeActivite[] = [];
+  // typeActivite: TypeActivite[] = [];
+  allTypeActivite: TypeActivite[] = []; // Garder tous les types d'activités
+  filteredTypeActivite: TypeActivite[] = []; // Types d'activités filtrés pour l'entité sélectionnée
   salleId: Salle[] = [];
   userRoles: string[] = [];
 
@@ -158,12 +160,41 @@ export class AjoutActiviteComponent {
   getAllTypeActivite() {
     this.globalService.get("typeActivite").subscribe({
       next: (value) => {
-        this.typeActivite = value;
+        this.allTypeActivite = value;
+        this.filteredTypeActivite = [...this.allTypeActivite]; // Initialiser avec tous les types
+        console.log("Filter", this.filteredTypeActivite)
+
       },
       error: (err: any) => {
         console.log(err);
       }
     });
   }
+
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
+
+
+  onEntiteChange(event: any): void {
+    const entiteId = Number(event.target.value);
+    if (entiteId) {
+      this.globalService.getId("typeActivite/by-entite", entiteId).subscribe(
+        (data) => {
+          this.filteredTypeActivite = data;
+          console.log("TypeActivités filtrées :", data);
+        },
+        (error) => {
+          console.error("Erreur chargement typeActivites:", error);
+          this.filteredTypeActivite = [];
+        }
+      );
+    } else {
+      this.filteredTypeActivite = [];
+    }
+  }
+
+
+
 
 }

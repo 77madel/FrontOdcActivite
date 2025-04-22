@@ -15,7 +15,7 @@ export class Activity{
   statut?: string;
   etapes?: Etape[];
   entite?: Entite;
-  typeActivite?: TypeActivite;
+  typeActivite?: null;
   salleId?: Salle;
 
   constructor(data?: Partial<Activity>) {

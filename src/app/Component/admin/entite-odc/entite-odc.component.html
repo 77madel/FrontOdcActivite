@@ -110,6 +110,22 @@
         </select>
       </div>
 
+      <div class="flex flex-col">
+        <label for="typeActivites" class="text-sm font-semibold text-gray-700">Sélectionner les Types d'Activité</label>
+        <select
+          multiple
+          id="typeActivites"
+          name="typeActivites"
+          [(ngModel)]="selectedTypeActivites"
+          class="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring focus:ring-orange-500 focus:border-orange-500"
+        >
+          <option *ngFor="let option of allTypeActivite" [ngValue]="option.id">
+            {{ option.type }}
+          </option>
+        </select>
+        <div class="mt-1 text-gray-500 text-sm">Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs options.</div>
+      </div>
+
       <!-- Bouton d'ajout ou de modification -->
       <div class="mt-4">
         <button

@@ -74,8 +74,9 @@
 
         <div>
           <label for="entite" class="block text-sm font-medium text-gray-700">Entité</label>
-          <select id="entite" name="entite" [(ngModel)]="activiteToAdd.entite" required
+          <select id="entite" name="entite" [(ngModel)]="activiteToAdd.entite" (change)="onEntiteChange($event)" required
                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">
+            <option value="" disabled selected>Sélectionner une entité</option>
             <option *ngFor="let option of entite" [value]="option.id">{{ option.nom }}</option>
           </select>
         </div>
@@ -86,7 +87,8 @@
           <label for="typeActivite" class="block text-sm font-medium text-gray-700">Type Activité</label>
           <select id="typeActivite" name="typeActivite" [(ngModel)]="activiteToAdd.typeActivite" required
                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 w-full">
-            <option *ngFor="let option of typeActivite" [value]="option.id">{{ option.type }}</option>
+            <option value="" disabled selected>Sélectionner un type d'activité</option>
+            <option *ngFor="let option of filteredTypeActivite" [value]="option.id">{{ option.type }}</option>
           </select>
         </div>
 

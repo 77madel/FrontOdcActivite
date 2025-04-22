@@ -46,7 +46,7 @@
         <td class="p-3">{{ element.lieu }}</td>
         <td class="p-3">{{ element.objectifParticipation }}</td>
         <td class="p-3">{{ element.entite?.nom }}</td>
-        <td class="p-3">{{ element.typeActivite?.type }}</td>
+<!--        <td class="p-3">{{ element.typeActivite.type }}</td>-->
         <td class="p-3">{{ element.salleId?.nom }}</td>
 
         <td class="p-3">
@@ -61,9 +61,9 @@
         </td>
 <!--        *ngIf="userRoles.includes('PERSONNEL')"-->
         <td  class="p-3 flex gap-2" *ngIf="userRoles.includes('PERSONNEL')">
-          <button  class="text-bg-dark hover:text-orange-500">
-            <i class="fas fa-eye"></i>
-          </button>
+<!--          <button  class="text-bg-dark hover:text-orange-500">-->
+<!--            <i class="fas fa-eye"></i>-->
+<!--          </button>-->
           <button (click)="updateActivite(element.id)" class="text-bg-dark hover:text-orange-500">
             <i class="fas fa-edit"></i>
           </button>
@@ -74,7 +74,7 @@
 
         <!-- Message si aucune étape n'est disponible pour l'activité -->
         <td *ngIf="!element.etapes || element.etapes.length === 0" colspan="7" class="px-6 py-4 text-center text-sm text-red-500 dark:text-red-400 blink text-red-500">
-          Cette activité n'a pas d'étapes.
+          Activité n'a pas d'étapes.
         </td>
       </tr>
       <tr *ngIf="!activiteList || activiteList.length === 0">
